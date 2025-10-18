@@ -4,14 +4,17 @@ void setup() {
   while (!Serial) {
     delay(100); // wait for serial port to connect
   }
-
-  Serial.print("!AKHi#");
 }
 
 void loop() {
+  //echo
+  while (Serial.available() > 0) {
+    byte b = Serial.read();
+    Serial.write(b);  // write the same byte back, unchanged
+  }
   // Send your message
-  Serial.print("!AKREP");
-
+  Serial.print("!ABCD");
+  
   // Wait for 1 second
   delay(1000);
 }

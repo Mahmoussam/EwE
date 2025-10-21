@@ -1,7 +1,9 @@
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QThread
 import time
-from serial_utils import *
+
+from E_Serial import *
+
 
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -14,10 +16,14 @@ class MyWindow(QtWidgets.QMainWindow):
         uic.loadUi("UIs/main_gui.ui", self)
 
         # connect Buttons
+        # Comm 
         self.ComRefreshButton.clicked.connect(self.ComRefreshButton_clicked)
         self.ComConnectButton.clicked.connect(self.ComConnectButton_clicked)
         self.ComStopButton.clicked.connect(self.ComStopButton_clicked)
 
+        # DRW
+        self.WriteValButton.clicked.connect(self.__DRW_WriteValButton_clicked)
+        self.ReadValButton.clicked.connect(self.__DRW_ReadValButton_clicked)
 
         # initial ports scan
         self.ComRefreshButton_clicked()
@@ -39,8 +45,14 @@ class MyWindow(QtWidgets.QMainWindow):
         print('Connecting com ports')
         # if previous worker alive , stop it!
         self.__disconnect_serial()
-
-        if self.__connect_to_Serial():
+        try:    
+            # get data
+            port = self.ComPortscomboBox.currentText()
+            baud_rate = int(self.baudrateInput.text())
+        except Exception as ex:
+            print(RED_CMD , f"Can't parse port/baud input: {ex}" , WHITE_CMD)
+            return
+        if self.__connect_to_Serial(port , baud_rate):
             #success
             pass
         else:
@@ -54,6 +66,45 @@ class MyWindow(QtWidgets.QMainWindow):
         self.__disconnect_serial()
         # update ui
         self.__refresh_ui()
+
+    def __DRW_WriteValButton_clicked(self):
+        print('Write button clicked')
+        addr = self.WriteAddrInput.text()
+        val  = self.WriteValInput.text()
+        try:
+            addr = int(addr , 0)
+            if addr.bit_length() > 5:
+                raise ValueError("Addr size > 5 bits, check GD3160 specs")
+        except ValueError as ex:
+            print(RED_CMD , f'Failed to parse Addr: {ex}' , WHITE_CMD)
+            return
+        try:
+            val = int(val , 0)
+            if val.bit_length() > 10:
+                raise ValueError("Val size > 10 bits, check GD3160 specs")
+        except ValueError as ex:
+            print(RED_CMD , f'Failed to parse Val: {ex}' , WHITE_CMD)
+            return
+        
+        if self.__sworker is None:
+            return
+        msg = WriteMessage(addr , val)
+        self.__sworker.send_message(msg)
+        
+    def __DRW_ReadValButton_clicked(self):
+        print('Read button clicked')
+        addr = self.ReadAddrInput.text()
+        try:
+            addr = int(addr , 0)
+            if addr.bit_length() > 5:
+                raise ValueError("Addr size > 5 bits, check GD3160 specs")
+        except ValueError as ex:
+            print(RED_CMD , f'Failed to parse Addr: {ex}' , WHITE_CMD)
+            return
+        if self.__sworker is None:
+            return
+        msg = ReadMessage(addr)
+        self.__sworker.send_message(msg)
         
     def __setEnabled_DRW_Fields(self , state = True):
         ''' Method to enable/disable the Direct Read Write Frame fields'''
@@ -66,13 +117,11 @@ class MyWindow(QtWidgets.QMainWindow):
         
         self.ComStopButton.setEnabled(self.__ComConnectionState)
 
-    def __connect_to_Serial(self):
+    def __connect_to_Serial(self, port , baud_rate):
         ''' handles action of connecting to serial port , creates a thread and worker '''
     
         try:
-            # get data
-            port = self.ComPortscomboBox.currentText()
-            baud_rate = int(self.baudrateInput.text())
+            
             # init serice
             self.__sworker = SerialWorker(port , baud_rate)
             self.__thread = QThread()

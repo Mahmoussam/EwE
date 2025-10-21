@@ -1,11 +1,19 @@
-CMD_LEN  = 3
-DATA_LEN = 3
-MSG_LEN = CMD_LEN + DATA_LEN
-SERIAL_DELI = '!'
+''' Serial Commands So far:
+    
+    1      ACKnowledge
+    2      Write Addr Val
+    3      Read  Addr 0
+
+    # raw binary (example format: "!CADD")  C for cmd , D for data..
+'''
 
 import serial.tools.list_ports
 from PyQt5.QtCore import QObject, QThread, pyqtSignal, pyqtSlot
 import time
+
+from .utils import *
+from .serial_messages import *
+
 
 def get_all_com_ports_names():
     names = []
@@ -14,19 +22,21 @@ def get_all_com_ports_names():
         names.append(port.device)
     return names
 
+
 class SerialWorker(QObject):
-    ''' Handles MCU Serial communication '''
-    data_received = pyqtSignal(str)   # (cmd, data)
+    ''' Worker thread that Handles MCU Serial communication sends/receives.
+        Middle layer between UI main thread and slave hardware(mcu)'''
+    data_received = pyqtSignal(bytes)
     status = pyqtSignal(bool)            # e.g. "Connected", "Disconnected"
 
-    def __init__(self, port = "COM4" , baud = 9600):
+    def __init__(self, port = "COM3" , baud = 9600):
         super().__init__()
         self.port = port
         self.baud = baud
         self._running = False
         self._ser = None
         self._tx_queue = []  # store outgoing commands temporarily
-        self.__buffer = ""
+        self.__buffer = b""
     @pyqtSlot()
     def start_serial(self):
         """Try to open the serial port and start reading loop."""
@@ -44,26 +54,27 @@ class SerialWorker(QObject):
         """Main loop: read incoming data and send queued commands."""
         while self._running:
             try:
-                # Read line (example format: "CMD,DATA\r\n")
+                # Read line (example format: "!CDDD")  C for cmd , D for data
                 ''' Buffered stream reading, protocol fixed size'''
-                feed = self._ser.read_all().decode(encoding = "ascii", errors='ignore').strip()
+                feed = self._ser.read_all().strip()
                 self.__buffer += feed
                 # try to re-line if packet loss occurs , Can it happen ?!
-                sidx = self.__buffer.find(SERIAL_DELI)
+                sidx = self.__buffer.find(SerialMessage.SERIAL_DELI)
                 if sidx != -1:
                     self.__buffer = self.__buffer[sidx:]
-                while len(self.__buffer) >= MSG_LEN:
-                    line = self.__buffer[:MSG_LEN]
-                    self.__buffer = self.__buffer[MSG_LEN:]
-                    self.data_received.emit(line)
+                while len(self.__buffer) >= SerialMessage.MSG_LEN:
+                    line = self.__buffer[:SerialMessage.MSG_LEN]
+                    self.__buffer = self.__buffer[SerialMessage.MSG_LEN:]
+                    self.__on_raw_message_received(line)
 
                 # send queued outgoing commands
                 if self._tx_queue:
                     print('[!] thread writing..')
                     to_send = self._tx_queue.pop(0)
-                    self._ser.write((to_send + "\n").encode())
-                    self._ser.flush()
-
+                    try:
+                        self.__send_message(to_send)
+                    except Exception as ex:
+                        print(RED_CMD , '[!] Wrong packet format: ',to_send ,f"\n {ex}" , WHITE_CMD)
                 time.sleep(0.02)
 
             except serial.SerialException as ex:
@@ -82,11 +93,23 @@ class SerialWorker(QObject):
             self.status.emit(False)
 
     @pyqtSlot(str)
-    def send_command(self, cmd):
-        """Add command to transmission queue."""
-        self._tx_queue.append(cmd)
+    def send_message(self, msg : SerialMessage):
+        """Add message to transmission queue."""
+        self._tx_queue.append(msg)
 
     @pyqtSlot()
     def stop(self):
         """Stop worker loop."""
         self._running = False
+
+    def __on_raw_message_received(self , raw_msg: bytes):
+        ''' Callback handler on complete raw message received on serial '''
+
+        self.data_received.emit(raw_msg)
+    def __send_message(self , to_send : SerialMessage):
+        ''' Called on message object ready to be sent
+            process the object to raw bytes and writes them to serial '''
+        msg_bytes = to_send.to_bytes()
+        print(YELLOW_CMD , '[*] Sending ' , msg_bytes , WHITE_CMD)
+        self._ser.write(msg_bytes)
+        self._ser.flush()

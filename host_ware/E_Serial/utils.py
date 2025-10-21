@@ -1,0 +1,3 @@
+RED_CMD    = "\033[1;31m"
+YELLOW_CMD = "\033[1;33m"
+WHITE_CMD  = "\033[0m"

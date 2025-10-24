@@ -26,7 +26,7 @@ def get_all_com_ports_names():
 class SerialWorker(QObject):
     ''' Worker thread that Handles MCU Serial communication sends/receives.
         Middle layer between UI main thread and slave hardware(mcu)'''
-    data_received = pyqtSignal(bytes)
+    data_received = pyqtSignal(SerialMessage)
     status = pyqtSignal(bool)            # e.g. "Connected", "Disconnected"
 
     def __init__(self, port = "COM3" , baud = 9600):
@@ -59,10 +59,12 @@ class SerialWorker(QObject):
                 feed = self._ser.read_all().strip()
                 self.__buffer += feed
                 # try to re-line if packet loss occurs , Can it happen ?!
-                sidx = self.__buffer.find(SerialMessage.SERIAL_DELI)
-                if sidx != -1:
-                    self.__buffer = self.__buffer[sidx:]
+                
                 while len(self.__buffer) >= SerialMessage.MSG_LEN:
+                    sidx = self.__buffer.find(SerialMessage.SERIAL_DELI)
+                    if sidx == -1:
+                        break
+                    self.__buffer = self.__buffer[sidx:]
                     line = self.__buffer[:SerialMessage.MSG_LEN]
                     self.__buffer = self.__buffer[SerialMessage.MSG_LEN:]
                     self.__on_raw_message_received(line)
@@ -104,8 +106,8 @@ class SerialWorker(QObject):
 
     def __on_raw_message_received(self , raw_msg: bytes):
         ''' Callback handler on complete raw message received on serial '''
-
-        self.data_received.emit(raw_msg)
+        print(raw_msg)
+        self.data_received.emit(SerialMessage.from_bytes(raw_msg))
     def __send_message(self , to_send : SerialMessage):
         ''' Called on message object ready to be sent
             process the object to raw bytes and writes them to serial '''

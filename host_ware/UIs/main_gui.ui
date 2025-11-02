@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>936</width>
-    <height>752</height>
+    <width>933</width>
+    <height>845</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -101,7 +101,7 @@
      <x>9</x>
      <y>89</y>
      <width>911</width>
-     <height>511</height>
+     <height>381</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -188,16 +188,13 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_4">
-         <property name="font">
-          <font>
-           <family>Consolas</family>
-           <pointsize>10</pointsize>
-          </font>
+       <item row="1" column="3">
+        <widget class="QLineEdit" name="ReadValOutput">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
-         <property name="text">
-          <string>Read Addr:</string>
+         <property name="toolTip">
+          <string>The value read at specified address within DUT</string>
          </property>
         </widget>
        </item>
@@ -211,19 +208,6 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="font">
-          <font>
-           <family>Consolas</family>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Write Val:</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="1">
         <widget class="QLineEdit" name="WriteValInput">
          <property name="enabled">
@@ -234,29 +218,6 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
-        <widget class="QLabel" name="label_5">
-         <property name="font">
-          <font>
-           <family>Consolas</family>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Read Val:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="3">
-        <widget class="QLineEdit" name="ReadValOutput">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>The value read at specified address within DUT</string>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
@@ -264,30 +225,29 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QPushButton" name="WriteValButton">
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>30</height>
-          </size>
-         </property>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_4">
          <property name="font">
           <font>
-           <pointsize>9</pointsize>
-           <weight>50</weight>
-           <bold>false</bold>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>Write</string>
+          <string>Read Addr:</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="label_7">
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="text">
-          <string/>
+          <string>Write Val:</string>
          </property>
         </widget>
        </item>
@@ -308,6 +268,46 @@
          </property>
          <property name="text">
           <string>Read</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="label_5">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Read Val:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="WriteValButton">
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Write</string>
          </property>
         </widget>
        </item>

@@ -18,15 +18,17 @@ class SerialMessage():
     
     MID_CNT = 0
     
-    def __init__(self , cmd  = 0 , addr = 0 , data = 0):
+    def __init__(self , cmd  = 0 , addr = 0 , data = 0 , mid = -1):
         self._cmd  = cmd
         self._addr = addr
         self._data = data
-        SerialMessage.MID_CNT += 1
-        if SerialMessage.MID_CNT == 256:
-            SerialMessage.MID_CNT = 0
-        self.MID_CNT = SerialMessage.MID_CNT
-
+        if mid == -1:
+            SerialMessage.MID_CNT += 1
+            if SerialMessage.MID_CNT == 256:
+                SerialMessage.MID_CNT = 0
+            self.MID_CNT = SerialMessage.MID_CNT
+        else:
+            self.MID_CNT = mid
     
     def to_bytes(self):
         msg = self.SERIAL_DELI
@@ -41,13 +43,14 @@ class SerialMessage():
         return f"<SerialMessage#{self.MID_CNT} cmd={self._cmd:#x}, addr={self._addr:#x}, data={self._data:#x}>"
     
     @classmethod
-    def from_bytes(cls, data: bytes):
-        if data[0:1] != cls.SERIAL_DELI:
+    def from_bytes(cls, raw_data: bytes):
+        if raw_data[0:1] != cls.SERIAL_DELI:
             raise ValueError("Invalid delimiter")
-        cmd  = data[1]
-        addr = data[2]
-        data  = int.from_bytes(data[3:5], 'big')
-        return cls(cmd, addr, data)
+        cmd   = raw_data[1]
+        addr  = raw_data[2]
+        data  = int.from_bytes(raw_data[3:5], 'big')
+        mid   = raw_data[5]
+        return cls(cmd, addr, data , mid)
     
 class AcknowledgeMessage(SerialMessage):
     def __init__(self):

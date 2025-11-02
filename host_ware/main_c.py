@@ -12,7 +12,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.__ComConnectionState = False
         self.__sworker = None
         self.__thread  = None
-
+        self.__last_read_message_cid = -1
         uic.loadUi("UIs/main_gui.ui", self)
 
         # connect Buttons
@@ -25,6 +25,9 @@ class MyWindow(QtWidgets.QMainWindow):
         self.WriteValButton.clicked.connect(self.__DRW_WriteValButton_clicked)
         self.ReadValButton.clicked.connect(self.__DRW_ReadValButton_clicked)
 
+        self.ReadAddrInput.returnPressed.connect(self.__DRW_ReadValButton_clicked)
+        self.WriteValInput.returnPressed.connect(self.__DRW_WriteValButton_clicked)
+        self.WriteAddrInput.returnPressed.connect(lambda: self.WriteValInput.setFocus())
         # initial ports scan
         self.ComRefreshButton_clicked()
         
@@ -72,7 +75,10 @@ class MyWindow(QtWidgets.QMainWindow):
         addr = self.WriteAddrInput.text()
         val  = self.WriteValInput.text()
         try:
-            addr = int(addr , 0)
+            try:
+                addr = int(addr , 0)
+            except ValueError:
+                addr = str_to_register3160_addr(addr)
             if addr.bit_length() > 5:
                 raise ValueError("Addr size > 5 bits, check GD3160 specs")
         except ValueError as ex:
@@ -95,7 +101,10 @@ class MyWindow(QtWidgets.QMainWindow):
         print('Read button clicked')
         addr = self.ReadAddrInput.text()
         try:
-            addr = int(addr , 0)
+            try:
+                addr = int(addr , 0)
+            except ValueError:
+                addr = str_to_register3160_addr(addr)
             if addr.bit_length() > 5:
                 raise ValueError("Addr size > 5 bits, check GD3160 specs")
         except ValueError as ex:
@@ -103,7 +112,11 @@ class MyWindow(QtWidgets.QMainWindow):
             return
         if self.__sworker is None:
             return
+        
         msg = ReadMessage(addr)
+
+        self.__last_read_message_cid = msg.MID_CNT
+        
         self.__sworker.send_message(msg)
         
     def __setEnabled_DRW_Fields(self , state = True):
@@ -155,8 +168,12 @@ class MyWindow(QtWidgets.QMainWindow):
             self.__thread.wait()
         self.__ComConnectionState = False
 
-    def __on_data_received(self , data):
-        print("[!]__on data received" , data)
+    def __on_data_received(self , msg : SerialMessage):
+        print("[!]__on data received" , msg)
+        # Handle the event
+        # print(msg.MID_CNT , self.__last_read_message_cid)
+        if msg.MID_CNT == self.__last_read_message_cid:
+            self.ReadValOutput.setText(hex(msg._addr))
         pass
     def __on_status_update(self , status):
         print('[!]__on status update' , status)

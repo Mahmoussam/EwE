@@ -42,7 +42,7 @@ static const uint8_t crc_table[256] =
 //
 /// @return        unsigned char - CRC value.
 //////////////////////////////////////////////////////////////////////////////////////////
-static unsigned char Calculate_SPI_CRC(uint16_t wData)
+unsigned char Calculate_SPI_CRC(uint16_t wData)
 {
 	uint8_t tbl_idx;
 	uint8_t crc;

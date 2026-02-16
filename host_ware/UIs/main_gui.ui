@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>933</width>
-    <height>845</height>
+    <height>787</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Main</string>
   </property>
   <widget class="QFrame" name="ComConnectionFrame">
    <property name="geometry">
@@ -315,6 +315,19 @@
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>530</y>
+     <width>211</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Run Script</string>
+   </property>
   </widget>
  </widget>
  <resources/>

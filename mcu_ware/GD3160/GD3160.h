@@ -1283,7 +1283,7 @@ typedef enum ReqAdcAmux
 //
 /// @return        unsigned char - CRC value.
 //////////////////////////////////////////////////////////////////////////////////////////
-static unsigned char Calculate_SPI_CRC(uint16_t wData);
+unsigned char Calculate_SPI_CRC(uint16_t wData);
 
 
 

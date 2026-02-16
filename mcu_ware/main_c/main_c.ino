@@ -1,5 +1,10 @@
 
+#include <SPI.h>
+
 #include "eserial.h"
+
+// Chip select pin
+#define SS 10
 
 
 #define MSG_SIZE 6
@@ -11,11 +16,22 @@ bool msgReady = false;
 
 bool state13 = false;
 void setup() {
+  // Serial comm to PC init
   Serial.begin(9600);
   while (!Serial) {
     delay(10);
   }
+  // SPI to GD init
   
+  pinMode(SS, OUTPUT);
+  digitalWrite(SS, HIGH);
+
+  SPI.begin();
+  SPI.beginTransaction(SPISettings(
+    4000000,     // 4 MHz
+    MSBFIRST,
+    SPI_MODE0
+  ));
   pinMode(13 , OUTPUT);
 }
 
@@ -70,6 +86,7 @@ void serialEvent() {
   }
 }
 
+
 // ------------------------------------------------------
 // Main loop
 // ------------------------------------------------------
@@ -85,3 +102,31 @@ void loop() {
   serialEvent();
   // (serialEvent() runs automatically between loop iterations)
 }
+
+
+uint32_t gd3160_spi_transfer(uint8_t rw,
+                             uint8_t addr,
+                             uint16_t data)
+{
+    uint32_t frame = 0;
+
+    frame |= ((uint32_t)(rw & 0x01)) << 23;
+    frame |= ((uint32_t)(addr & 0x1F)) << 18;
+    frame |= ((uint32_t)(data & 0x03FF)) << 8;
+
+    uint8_t crc = gd3160_crc8(frame);//not yet included ..but implemented indeed..
+    frame |= crc;
+
+    uint32_t rx = 0;
+
+    digitalWrite(SS, LOW);
+
+    rx |= ((uint32_t)SPI.transfer((frame >> 16) & 0xFF)) << 16;
+    rx |= ((uint32_t)SPI.transfer((frame >> 8)  & 0xFF)) << 8;
+    rx |= ((uint32_t)SPI.transfer(frame & 0xFF));
+
+    digitalWrite(SS, HIGH);
+
+    return rx;
+}
+

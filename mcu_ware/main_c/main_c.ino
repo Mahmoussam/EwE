@@ -114,7 +114,7 @@ uint32_t gd3160_spi_transfer(uint8_t rw,
     frame |= ((uint32_t)(addr & 0x1F)) << 18;
     frame |= ((uint32_t)(data & 0x03FF)) << 8;
 
-    uint8_t crc = gd3160_crc8(frame);//not yet included ..but implemented indeed..
+    uint8_t crc = frame;//gd3160_crc8(frame);//not yet included ..but implemented indeed..
     frame |= crc;
 
     uint32_t rx = 0;

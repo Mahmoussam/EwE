@@ -3,6 +3,7 @@ from PyQt5.QtCore import QThread
 import time
 
 from E_Serial import *
+from status_window import GDStatusWindow
 
 
 class MyWindow(QtWidgets.QMainWindow):
@@ -13,6 +14,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.__sworker = None
         self.__thread  = None
         self.__last_read_message_cid = -1
+        self.__status_window = None
         uic.loadUi("UIs/main_gui.ui", self)
 
         # connect Buttons
@@ -179,10 +181,16 @@ class MyWindow(QtWidgets.QMainWindow):
         print('[!]__on status update' , status)
         if status:
             self.__ComConnectionState = True
-            pass
+            # Create and show a new status window
+            self.__status_window = GDStatusWindow(self.__sworker)
+            self.__status_window.show()
         else:
             self.__ComConnectionState = False
-            pass#hmmm...
+            # Terminate status window if it exists
+            if self.__status_window is not None:
+                self.__status_window.close()
+                self.__status_window.deleteLater()
+                self.__status_window = None
         self.__refresh_ui()
 
 if __name__ == '__main__':

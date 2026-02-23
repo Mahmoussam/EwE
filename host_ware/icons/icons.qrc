@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/icon">
+    <file>refresh.svg</file>
+    <file>screenshot.svg</file>
+  </qresource>
+</RCC>

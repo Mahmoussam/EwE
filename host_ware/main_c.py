@@ -1,6 +1,8 @@
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QThread
 import time
+import os
+import sys
 
 from E_Serial import *
 from status_window import GDStatusWindow
@@ -9,13 +11,20 @@ from status_window import GDStatusWindow
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
+        
+        # Run startup validation
+        if not self.__startup_validation():
+            sys.exit(1)
+        
         # init private members
         self.__ComConnectionState = False
         self.__sworker = None
         self.__thread  = None
         self.__last_read_message_cid = -1
         self.__status_window = None
-        uic.loadUi("UIs/main_gui.ui", self)
+        # Load the UI with absolute path
+        ui_path = os.path.join(os.path.dirname(__file__), "UIs", "main_gui.ui")
+        uic.loadUi(ui_path, self)
 
         # connect Buttons
         # Comm 
@@ -32,6 +41,44 @@ class MyWindow(QtWidgets.QMainWindow):
         self.WriteAddrInput.returnPressed.connect(lambda: self.WriteValInput.setFocus())
         # initial ports scan
         self.ComRefreshButton_clicked()
+        
+    def __startup_validation(self):
+        """Validate that all required directories and files exist"""
+        base_dir = os.path.dirname(__file__)
+        
+        # Create required directories if they don't exist
+        dirs_to_create = ["icons", "screenshots"]
+        for dir_name in dirs_to_create:
+            dir_path = os.path.join(base_dir, dir_name)
+            if not os.path.exists(dir_path):
+                try:
+                    os.makedirs(dir_path)
+                    print(f"[Startup] Created directory: {dir_path}")
+                except Exception as ex:
+                    print(f"[Startup] ERROR: Failed to create directory {dir_path}: {ex}")
+                    QtWidgets.QMessageBox.critical(None, "Startup Error", f"Failed to create directory: {dir_path}")
+                    return False
+        
+        # Check if required UI files exist
+        required_ui_files = {
+            "UIs/main_gui.ui": "Main window UI",
+            "UIs/status_gui.ui": "Status window UI"
+        }
+        
+        missing_files = []
+        for ui_file, description in required_ui_files.items():
+            ui_path = os.path.join(base_dir, ui_file)
+            if not os.path.exists(ui_path):
+                missing_files.append(ui_file)
+        
+        if missing_files:
+            error_msg = "Missing files:\n" + "\n".join(missing_files)
+            print(f"[Startup] ERROR: {error_msg}")
+            QtWidgets.QMessageBox.critical(None, "Missing Files", error_msg)
+            return False
+        
+        print("[Startup] All validation checks passed")
+        return True
         
     def ComRefreshButton_clicked(self):
         print('Refreshing com ports..')

@@ -1,0 +1,10 @@
+{
+    "python.defaultInterpreterPath": "C:\\Users\\princ\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
+    "python.pythonPath": "C:\\Users\\princ\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    },
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "editor.formatOnSave": false
+}

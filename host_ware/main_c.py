@@ -3,6 +3,8 @@ from PyQt5.QtCore import QThread
 import time
 import os
 import sys
+import asyncio
+from qasync import QEventLoop, asyncSlot
 
 from E_Serial import *
 from status_window import GDStatusWindow
@@ -19,8 +21,8 @@ class MyWindow(QtWidgets.QMainWindow):
         # init private members
         self.__ComConnectionState = False
         self.__sworker = None
+        self.__dispatcher = None
         self.__thread  = None
-        self.__last_read_message_cid = -1
         self.__status_window = None
         # Load the UI with absolute path
         ui_path = os.path.join(os.path.dirname(__file__), "UIs", "main_gui.ui")
@@ -32,12 +34,12 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ComConnectButton.clicked.connect(self.ComConnectButton_clicked)
         self.ComStopButton.clicked.connect(self.ComStopButton_clicked)
 
-        # DRW
-        self.WriteValButton.clicked.connect(self.__DRW_WriteValButton_clicked)
-        self.ReadValButton.clicked.connect(self.__DRW_ReadValButton_clicked)
+        # DRW - Use asyncSlot for async button handlers
+        self.WriteValButton.clicked.connect(lambda: asyncio.create_task(self.__DRW_WriteValButton_clicked()))
+        self.ReadValButton.clicked.connect(lambda: asyncio.create_task(self.__DRW_ReadValButton_clicked()))
 
-        self.ReadAddrInput.returnPressed.connect(self.__DRW_ReadValButton_clicked)
-        self.WriteValInput.returnPressed.connect(self.__DRW_WriteValButton_clicked)
+        self.ReadAddrInput.returnPressed.connect(lambda: asyncio.create_task(self.__DRW_ReadValButton_clicked()))
+        self.WriteValInput.returnPressed.connect(lambda: asyncio.create_task(self.__DRW_WriteValButton_clicked()))
         self.WriteAddrInput.returnPressed.connect(lambda: self.WriteValInput.setFocus())
         # initial ports scan
         self.ComRefreshButton_clicked()
@@ -92,7 +94,9 @@ class MyWindow(QtWidgets.QMainWindow):
     def __refresh_ui(self):
         self.__setEnabled_DRW_Fields(self.__ComConnectionState)
         self.__handle_ComStopButton_state()
-
+        self.__handle_WriteValButton_state()
+        self.__handle_ReadValButton_state()
+        
     def ComConnectButton_clicked(self):
         print('Connecting com ports')
         # if previous worker alive , stop it!
@@ -119,7 +123,8 @@ class MyWindow(QtWidgets.QMainWindow):
         # update ui
         self.__refresh_ui()
 
-    def __DRW_WriteValButton_clicked(self):
+    async def __DRW_WriteValButton_clicked(self):
+        '''Async handler for Write button - sends write request and awaits response'''
         print('Write button clicked')
         addr = self.WriteAddrInput.text()
         val  = self.WriteValInput.text()
@@ -141,12 +146,21 @@ class MyWindow(QtWidgets.QMainWindow):
             print(RED_CMD , f'Failed to parse Val: {ex}' , WHITE_CMD)
             return
         
-        if self.__sworker is None:
+        if self.__dispatcher is None or self.__sworker is None:
+            print(RED_CMD , 'Serial not connected!' , WHITE_CMD)
             return
-        msg = WriteMessage(addr , val)
-        self.__sworker.send_message(msg)
         
-    def __DRW_ReadValButton_clicked(self):
+        # Use dispatcher to send and await response
+        try:
+            response = await self.__dispatcher.write_register(addr, val, timeout=2.0)
+            print(f'[✓] Write successful: {response}')
+        except asyncio.TimeoutError:
+            print(RED_CMD , f'[✗] Write timeout for addr {addr:#x}' , WHITE_CMD)
+        except Exception as ex:
+            print(RED_CMD , f'[✗] Write error: {ex}' , WHITE_CMD)
+        
+    async def __DRW_ReadValButton_clicked(self):
+        '''Async handler for Read button - sends read request and awaits response'''
         print('Read button clicked')
         addr = self.ReadAddrInput.text()
         try:
@@ -159,14 +173,22 @@ class MyWindow(QtWidgets.QMainWindow):
         except ValueError as ex:
             print(RED_CMD , f'Failed to parse Addr: {ex}' , WHITE_CMD)
             return
-        if self.__sworker is None:
+        
+        if self.__dispatcher is None or self.__sworker is None:
+            print(RED_CMD , 'Serial not connected!' , WHITE_CMD)
             return
         
-        msg = ReadMessage(addr)
-
-        self.__last_read_message_cid = msg.MID_CNT
-        
-        self.__sworker.send_message(msg)
+        # Use dispatcher to send and await response
+        try:
+            data = await self.__dispatcher.read_register(addr, timeout=2.0)
+            print(f'[✓] Read successful: addr={addr:#x}, data={data:#x}')
+            self.ReadValOutput.setText(hex(data))
+        except asyncio.TimeoutError:
+            print(RED_CMD , f'[✗] Read timeout for addr {addr:#x}' , WHITE_CMD)
+            self.ReadValOutput.setText('TIMEOUT')
+        except Exception as ex:
+            print(RED_CMD , f'[✗] Read error: {ex}' , WHITE_CMD)
+            self.ReadValOutput.setText('ERROR')
         
     def __setEnabled_DRW_Fields(self , state = True):
         ''' Method to enable/disable the Direct Read Write Frame fields'''
@@ -178,18 +200,28 @@ class MyWindow(QtWidgets.QMainWindow):
         ''' Private Method to handle the state of ComStop Button (Enabled/Disabled) according to `__ComConnectionState` '''
         
         self.ComStopButton.setEnabled(self.__ComConnectionState)
+    def __handle_WriteValButton_state(self):
+        ''' Private Method to handle the state of ComStop Button (Enabled/Disabled) according to `__ComConnectionState` '''
+        
+        self.WriteValButton.setEnabled(self.__ComConnectionState)
+    def __handle_ReadValButton_state(self):
+        ''' Private Method to handle the state of ComStop Button (Enabled/Disabled) according to `__ComConnectionState` '''
+        
+        self.ReadValButton.setEnabled(self.__ComConnectionState)
 
     def __connect_to_Serial(self, port , baud_rate):
         ''' handles action of connecting to serial port , creates a thread and worker '''
     
         try:
             
-            # init serice
+            # init service
             self.__sworker = SerialWorker(port , baud_rate)
             self.__thread = QThread()
             self.__sworker.moveToThread(self.__thread)
 
-            self.__sworker.data_received.connect(self.__on_data_received)
+            # Create dispatcher - it will handle data_received internally
+            self.__dispatcher = SerialDispatcher(self.__sworker)
+            
             self.__sworker.status.connect(self.__on_status_update)
 
             self.__thread.finished.connect(self.__sworker.deleteLater)
@@ -211,25 +243,23 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def __disconnect_serial(self):
         ''' Disconnects serial connection and kills thread/serial worker '''
+        if self.__dispatcher is not None:
+            # Cancel all pending requests
+            self.__dispatcher.cancel_all_pending()
+            self.__dispatcher = None
         if self.__sworker is not None:
             self.__sworker.stop()
             self.__thread.quit()
             self.__thread.wait()
         self.__ComConnectionState = False
 
-    def __on_data_received(self , msg : SerialMessage):
-        print("[!]__on data received" , msg)
-        # Handle the event
-        # print(msg.MID_CNT , self.__last_read_message_cid)
-        if msg.MID_CNT == self.__last_read_message_cid:
-            self.ReadValOutput.setText(hex(msg._addr))
-        pass
+
     def __on_status_update(self , status):
         print('[!]__on status update' , status)
         if status:
             self.__ComConnectionState = True
-            # Create and show a new status window
-            self.__status_window = GDStatusWindow(self.__sworker)
+            # Create and show a new status window, pass dispatcher instead of worker
+            self.__status_window = GDStatusWindow(self.__dispatcher)
             self.__status_window.show()
         else:
             self.__ComConnectionState = False
@@ -242,6 +272,13 @@ class MyWindow(QtWidgets.QMainWindow):
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
+    
+    # Set up asyncio event loop for qasync
+    loop = QEventLoop(app)
+    asyncio.set_event_loop(loop)
+    
     window = MyWindow()
     window.show()
-    app.exec_()
+    
+    with loop:
+        loop.run_forever()

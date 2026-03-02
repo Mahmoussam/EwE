@@ -1,7 +1,7 @@
 
 #include <SPI.h>
 
-#include "eserial.h"
+#include "E_Serial/src/E_Serial.h"
 
 // Chip select pin
 #define SS 10
@@ -55,10 +55,18 @@ void onMessageReceived(const byte *raw_msg) {
     state13 = !state13;
     digitalWrite(13 , state13);
     SerialMessage response;
-    make_ACKSerialMessage(msg.addr , msg.data , msg.mid , &response);
-    char out[6];
-    get_bytes_from_SerialMessage(out , &response);
-    sendMessage(out);
+    if(msg.type == WR){
+        make_ACKSerialMessage(msg.addr , msg.data , msg.mid , &response);
+        char out[6];
+        get_bytes_from_SerialMessage(out , &response);
+        sendMessage(out);
+    }else if(msg.type == RE){
+        //simulate read response with data = addr*2 for testing
+        make_ACKSerialMessage(msg.addr , msg.addr*2 , msg.mid , &response);
+        char out[6];
+        get_bytes_from_SerialMessage(out , &response);
+        sendMessage(out);
+    }
   }
 
   
@@ -71,13 +79,13 @@ void onMessageReceived(const byte *raw_msg) {
 void serialEvent() {
   while (Serial.available() > 0) {
     byte b = Serial.read();
-
+    //Serial.print(b);
     // If we’re at start and see START_BYTE, begin buffering
     if (rxIndex == 0 && b != START_BYTE)
       continue;  // ignore until we see '!'
     
     rxBuffer[rxIndex++] = b;
-
+    
     if (rxIndex >= MSG_SIZE) {
       rxIndex = 0;
       msgReady = true;
@@ -93,12 +101,13 @@ void serialEvent() {
 void loop() {
   // Example: periodically send a message
   static unsigned long lastSend = 0;
-  if (millis() - lastSend > 3000) {
+  /*
+  if (millis() - lastSend > 10000) {
     lastSend = millis();
 
     byte msg[MSG_SIZE] = {START_BYTE, 'H', 'E', 'L', 'L', 'O'};
     sendMessage(msg);
-  }
+  }*/
   serialEvent();
   // (serialEvent() runs automatically between loop iterations)
 }

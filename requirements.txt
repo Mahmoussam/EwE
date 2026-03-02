@@ -1,0 +1,8 @@
+# PyQt5 for GUI
+PyQt5>=5.15.0
+
+# qasync for asyncio integration with Qt
+qasync>=0.24.0
+
+# pySerial for serial communication
+pyserial>=3.5

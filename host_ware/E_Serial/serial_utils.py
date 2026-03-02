@@ -10,6 +10,7 @@
 import serial.tools.list_ports
 from PyQt5.QtCore import QObject, QThread, pyqtSignal, pyqtSlot
 import time
+import traceback
 
 from .utils import *
 from .serial_messages import *
@@ -56,7 +57,7 @@ class SerialWorker(QObject):
             try:
                 # Read line (example format: "!CDDD")  C for cmd , D for data
                 ''' Buffered stream reading, protocol fixed size'''
-                feed = self._ser.read_all().strip()
+                feed = self._ser.read_all()
                 self.__buffer += feed
                 # try to re-line if packet loss occurs , Can it happen ?!
                 
@@ -86,6 +87,7 @@ class SerialWorker(QObject):
                 break
             except Exception as ex:
                 print(f"\033[1;31mSerial Exception {ex}.\033[0m")
+                traceback.print_exc()
                 self.status.emit(False)
                 self._running = False
                 break
@@ -106,7 +108,7 @@ class SerialWorker(QObject):
 
     def __on_raw_message_received(self , raw_msg: bytes):
         ''' Callback handler on complete raw message received on serial '''
-        print(raw_msg)
+        print('got raw:' , raw_msg)
         self.data_received.emit(SerialMessage.from_bytes(raw_msg))
     def __send_message(self , to_send : SerialMessage):
         ''' Called on message object ready to be sent

@@ -1,0 +1,1153 @@
+GD3160 REGISTER INFORMATION EXTRACTION
+====================================================================================================
+
+
+
+========== PAGE 74 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+11.14  SPI registers
+The SPI registers and their definitions are shown in Table 25 .
+SPI COMMANDS Rb/W ADDR[4:0] DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Name Description [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+MODE1 Operating Mode 1 0/1 0x00 AOUT SEGDRV AMC TIME_2 SSD 2LTO ACTCLMP DESAT SCSNS OCSNS -
+MODE2 Operating Mode 2 0/1 0x01 SCFF RTRPT RTMON_
+CFGFSISOEN TISNS_EN — BIST CONFIG_EN RESET - -
+CONFIG1 Configuration 1 0/1 0x02 UV_LATCH UV_TH [2] UV_TH [1] UV_TH [0] OCTH [2] OCTH [1] OCTH [0] OCFILT [2] OCFILT [1] OCFILT [0] -
+CONFIG2 Configuration 2 0/1 0x03 2LTOV [3] 2LTOV [2] 2LTOV [1] 2LTOV [0] SCTH [2] SCTH [1] SCTH [0] SCFILT [2] SCFILT [1] SCFILT [0] -
+CONFIG3 Configuration 3 0/1 0x04 INTBFS SEG
+DRVDLY [2]SEG
+DRVDLY [1]SEG
+DRVDLY [0]SSD_CUR
+[2]SSD_CUR
+[1]SSD_CUR
+[0]SSDT [2] SSDT [1] SSDT [0] -
+CONFIG4 Configuration 4 0/1 0x05 DESAT_FLT
+[1]DESAT_FLT
+[0]SEGDRV_
+TH [2]SEGDRV_
+TH [1]SEGDRV_
+TH [0]IDESAT [1] IDESAT [0] DESAT_LEB
+[2]DESAT_LEB
+[1]DESAT_LEB
+[0]-
+CONFIG5 Configuration 5 0/1 0x06 DEADT [3] DEADT [2] DEADT [1] DEADT [0] — AOU
+TCONF [1]AOU
+TCONF [0]COMERR
+CONF [2]COMERR
+CONF [1]COMERR
+CONF [0]
+CONFIG6 Configuration 6 0/1 0x07 VCCREG[2] VCCREG[1] VCCREG[0] — WDTO [1] WDTO [0] RTMONDLY
+[3]RTMONDLY [2] RTMONDLY [1] RTMONDLY [0]
+CONFIG7 Configuration 7 0/1 0x08 — — — — — — DESAT_TH
+[3]DESAT_TH [2] DESAT_TH [1] DESAT_TH [0] -
+OT_TH Config OT
+Threshold0/1 0x09 OT_TH [9] OT_TH [8] OT_TH [7] OT_TH [6] OT_TH [5] OT_TH [4] OT_TH [3] OT_TH [2] OT_TH [1] OT_TH [0] -
+OTW_TH Conf. OT Warn
+Thresh0/1 0x0A OTW_TH
+[9]OTW_TH
+[8]OTW_TH
+[7]OTW_TH
+[6]OTW_TH
+[5]OTW_TH
+[4]OTW_TH
+[3]OTW_TH [2] OTW_TH [1] OTW_TH [0] -
+STATUS1 Status 1 0/1 0x0B VCCOV VCC
+REGUVVSUPOV OTSD_IC OTSD OTW CLAMP DESAT SC OC -
+MSK1 Status Mask 1 0/1 0x0C VCCOVM VCC
+REGUVMVSUPOVM — OTSDM OTWM CLAMPM — — OCM -
+RMSK1 Report Mask 1 0/1 0x0D VCCOVA VCC
+REGUVAVSUPOVA OTSD_ICA OTSDA OTWA CLAMPA DESATA SCA OCA -
+STATUS2 Status 2 0/1 0x0E BIST_FAIL VDD_UVOV DTFLT SPIERR CONFCR
+CERRRTMON_
+FLTWDOG_FLT COMERR VREF_UV VEE_OOR -
+MSK2 Status Mask 2 0/1 0x0F — — DTFLTM SPIERRM CONFCR
+CERRMRTMON_
+FLTMWDOG_
+FLTMCOMERRM — VEE_OORM -
+RMSK2 Report Mask 2 0/1 0x10 — — DTFLTA — — — — — VREF_UVA VEE_OORA -
+STATUS3 Status 3 0/1 0x11 POR_1 POR_2 FSISO PWM PWMALT FSSTATE FSENB INTB INTA VRTMON -
+CONFIGA
+OUTAOUT
+Configuration0/1 0x12 ITSNS[1] ITSNS[0] TOFST[1] TOFST[0] TRNG AMU
+XINRNGAMUXINOS[1] AMUXINOS[0] AOUT_SEL [1] AOUT_SEL [0] -
+REQUEST ADC
+(command)0 0x13 — — — — — — AMUX_SEL
+[3]AMUX_SEL [2] AMUX_SEL [1] AMUX_SEL [0] - REQADC
+REQUEST ADC
+(response)0 0x13 ADCVAL [9] ADCVAL [8] ADCVAL [7] ADCVAL [6] ADCVAL [5] ADCVAL [4] ADCVAL [3] ADCVAL [2] ADCVAL [1] ADCVAL [0] -
+REQUEST BIST
+(command)0 0x14 0 0 0 0 0 0 0 0 0 0 - REQBIST
+REQUEST BIST
+(response)0 0x14 REQBIST
+[9]REQBIST
+[8]REQBIST
+[7]REQBIST
+[6]REQBIST
+[5]REQBIST
+[4]REQBIST
+[3]REQBIST [2] REQBIST [1] REQBIST [0] -
+ID Device ID 0 0x15 — — VDD3 LVDC[2] LVDC[1] LVDC[0] FS3ST HVDC[2] HVDC[1] HVDC[0] -
+— Not used — 0x16 to
+0x1F— — — — — — — — — - -Table 25. SPI registers
+11.14.1  MODE1 register (ADDR = 0x00)
+The MODE1 register settings enable or disable major functions of the GD3160, mostly regarding power device
+protections.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x00 AOUT SEGDRV AMC TIME_2 SSD 2LTO ACTCLMP DESAT SCSNS OCSNS —
+Write locked
+in normal
+mode— — yes yes yes yes yes yes yes yes yes yes —
+Default — — 0 0 1 1 1 1 0 1 0 0 —Table 26. MODE1 register bit readout
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+74 / 115
+====================================================================================================
+
+========== PAGE 75 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Bit Bit function Logic 0 Logic 1
+AOUT Configure operation of AOUT pin, reporting
+one or two signalsAOUT reports power device temperature
+only, continuously running at ~3.9 kHz. Duty
+cycle is a function of the ADC-converted
+TSENSEA result (10 % = 0x000, 90 % =
+0x3FF). [1]AOUT reports power device temperature and
+a second quantity, set by AOUT_SEL. Signals
+appear at AOUT alternatively at ~3.9 kHz and
+~5.6 kHz periods.
+SEGDRV Segmented drive enable/disable bit Segmented drive feature disabled.[1]Segmented drive feature enabled.
+AMC Active Miller clamp enable/disable bit Active Miller clamp feature disabled. AMC
+transistor is deactivated, but the AMC_th
+comparator is still operational.Active Miller clamp feature enabled.[1]
+TIME_2 Timer scaling bit for SSDT, RTMONDLY,
+DEADT, t VCECR  and t SSD_SEGTimers are multiplied by 2. Timers are not scaled.[1]
+SSD Soft shutdown enable/disable bit (for DESAT
+and SC conditions only, otherwise SSD is
+enabled)Soft shutdown disabled. Soft shutdown enabled.[1]
+2LTO Two-level turn-off enable/disable bit (for
+DESAT and SC conditions only)Two-level turn-off disabled. Two-level turn-off enabled.[1]
+ACTCLMP VCE Active clamping enable/disable bit VCE Active clamping disabled.[1]Vce Active clamping enabled, if SEGDRV = 0.
+DESAT VCE DESAT fault management enable/
+disable bitVCE DESAT fault management disabled. VCE DESAT fault management enabled.[1]
+SCSNS Short current fault management enable/
+disable bitDisable short current fault management.[1]Enable short current fault management.
+OCSNS Overcurrent fault management enable/
+disable bitDisable overcurrent fault management.[1]Enable overcurrent fault management, if
+SEGDRV = 0 and ACTCLAMP = 0.Table 27. MODE1 register description
+[1] Default value
+11.14.2  MODE2 register (ADDR = 0x01)
+The MODE2 register settings enable or disable critical features of the GD3160, and include commands for
+entering configuration mode (CONFIG), configuring INTA (RTRPT, RTMON_CFG), enabling built-in self-test
+(BIST), resetting the device (RESET), enabling control by FSISO, and others.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x01 SCFF RTRPT RTMON_
+CFGFSISOEN TISNS_EN — BIST CONFIG_
+ENRESET — —
+Write locked
+in normal
+mode— — yes yes yes yes yes yes yes no yes yes —
+Default — — 1 0 0 1 1 0 0 0 0 0 —Table 28. Mode2 register bit readout
+Bit Bit function Logic 0 Logic 1
+SCFF Short-circuit Fast-filter mode Normal short-circuit filter (SCFILT) times
+used.Short-circuit filter times (SCFILT) are 300 ns faster.[1]
+RTRPT Real-time report (VGE/VCE) on INTA
+enable/disable bitReal-time report disabled. INTA is used
+for fault monitor/report. [1]Real-time report on INTA enabled (all fault reporting on
+INTB).
+RTMON_CFG Real-time monitor/report selection Report/Monitor using VGE.[1]Report using VCE. This will also automatically mask the
+RFTMON_FLT. Real time Monitoring using VCE is not
+possible.
+FSISOEN FSISO enable/disable FSISO pin is not active; pin state is
+ignored.FSISO pin is active. FSISO pin controls gate output when
+high. [1]
+TISNS_EN Temperature sense excitation
+selectionInternal current source disabled. For use
+with thermistor-based solutions. (use anCurrent source (0.25 mA to 1.0 mA, per ITSNS[1:0])
+activated. For use with diode-based solutions. [1]Table 29. Mode2 register description
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+75 / 115
+====================================================================================================
+
+========== PAGE 76 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Bit Bit function Logic 0 Logic 1
+external resistor network to bias from
+VREF)
+BIST BIST enable/disable BIST feature is not active [1]Requests BIST of LV and HV die. PWMing is disabled
+until BIST is complete and BIST is reset to Logic 0. IGBT
+is OFF during BIST.
+CONFIG_EN SPI register configuration enable/
+disableConfiguration of SPI registers is
+disabled. Normal operation.[1]Enables Configuration of the SPI registers. IGBT gate
+is OFF during Configuration. CRC value of configured
+registers is calculated and stored on CSB rising edge
+when exiting configuration. PWMing is allowed on the
+next PWM rising edge after bit = 0. INTB pin reports faults
+normally.
+RESET Reset enable/disable GD31SiC not in Reset. Normal operating
+mode. [1]GD31SiC in reset. All configuration registers are set to
+default values. PWMing is disabled. Configuration is
+disabled. IGBT Is OFF. INTB = 0.Table 29. Mode2 register description ...continued
+[1] Default value
+11.14.3  CONFIG1 register (ADDR = 0x02)
+The CONFIG1 register contains ranges for overcurrent (voltage) threshold level, overcurrent filter time, gate
+supply undervoltage threshold level, and selects behavior following a gate supply undervoltage event (latching
+or non-latching turn-off).
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x02 UV_
+LATCHUV_TH [2] UV_TH [1] UV_TH [0] OCTH [2] OCTH [1] OCTH [0] OCFILT [2] OCFILT [1] OCFILT [0] —
+Write locked
+in normal
+mode— — yes yes yes yes yes yes yes yes yes yes —
+Default — — 0 0 1 1 0 1 1 0 1 1 —Table 30. CONFIG1 register bit readout
+Bit Bit function Logic 0 Logic 1
+UV_LATCH Configure VCCREG undervoltage
+behaviorPWM is gated by VCCREG undervoltage condition,
+but not latched off. INTA or INTB follows the
+VCCREG UV condition. VCCREG_UV SPI fault
+bit is latched. PWM disabled during VCCREG UV
+condition only. PWM is allowed upon VCCREG
+recovery. [1]PWM is latched off upon VCCREG undervoltage
+condition, until fault is cleared.
+INTA or INTB follows the VCCREG UV fault.
+SPI fault bit is latched. PWM is disabled until the
+VCCREG_UV fault bit is cleared.Table 31. CONFIG1 bit description
+[1] Default value
+Bit value
+[2:0]VCCREG undervoltage threshold
+UV_TH[2:0]Overcurrent fault detection threshold
+OCTH[2:0]Overcurrent fault detection filter time
+OCFILT[2:0]
+0x00 10.0 V 0.25 V 0.5 µs
+0x01 10.5 V 0.50 V 1.0 µs
+0x02 11.0 V 0.75 V 1.5 µs
+0x03 11.5 V [1]1.00 V [1]2.0 µs [1]
+0x04 12.0 V 1.25 V 2.5 µs
+0x05 12.5 V 1.50 V 3.0 µsTable 32. CONFIG1 parameter ranges
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+76 / 115
+====================================================================================================
+
+========== PAGE 77 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Bit value
+[2:0]VCCREG undervoltage threshold
+UV_TH[2:0]Overcurrent fault detection threshold
+OCTH[2:0]Overcurrent fault detection filter time
+OCFILT[2:0]
+0x06 13.0 V 1.75 V 3.5 µs
+0x07 13.5 V 2.00 V 4.0 µsTable 32. CONFIG1 parameter ranges ...continued
+[1] Default value
+11.14.4  CONFIG2 register (ADDR = 0x03)
+The CONFIG2 register contains selectable ranges for two-level turn-off voltage, short-circuit (voltage) threshold
+level, and short-circuit filter time. In setting the short-circuit filter time, the G3160 also refers to the SCFF bit in
+MODE2 for Fast filter mode, decreasing the short-circuit filter time.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x03 2LTOV [3] 2LTOV [2] 2LTOV [1] 2LTOV [0] SCTH [2] SCTH [1] SCTH [0] SCFILT [2] SCFILT [1] SCFILT [0] —
+Write locked
+in normal
+mode— — yes yes yes yes yes yes yes yes yes yes —
+Default — — 0 0 1 1 0 1 0 1 0 0 —Table 33. CONFIG2 register bit readout
+Bit value [3:0] Two-level turn-off (2LTO)
+voltage level
+2LTOV[3:0]Short-circuit fault
+detection threshold
+SCTH[2:0]Short-circuit fault
+detection filter time
+SCFILT[2:0] + SCFF = 0[1]Short-circuit fault
+detection filter time
+SCFILT[2:0] + SCFF = 1[1]
+0x00 6.48 V 0.50 V 400 ns 100 ns
+0x01 6.67 V 0.75 V 500 ns 200 ns
+0x02 6.87 V 1.00 V [2]600 ns 300 ns
+0x03 7.08 V [2]1.25 V 700 ns 400 ns
+0x04 7.32 V 1.50 V 800 ns [3]500 ns [2]
+0x05 7.56 V 2.00 V 900 ns 600 ns
+0x06 7.83 V 2.50 V 1000 ns 700 ns
+0x07 8.13 V 3.00 V 1100 ns 800 ns
+0x08 8.46 V — — —
+0x09 8.81 V — — —
+0x0A 9.19 V — — —
+0x0B 9.62 V — — —
+0x0C 10.09 V — — —
+0x0D 10.62 V — — —
+0x0E 11.21 V — — —
+0x0F 11.88 V — — —Table 34. CONFIG2 parameter ranges
+[1] SCFF is Short-circuit Fast Filter mode bit of MODE2 register
+[2] Default value
+[3] Default value upon changing SCFF value bit.
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+77 / 115
+====================================================================================================
+
+========== PAGE 78 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+11.14.5  CONFIG3 register (ADDR = 0x04)
+The CONFIG3 register contains selectable ranges for soft shutdown current, soft shutdown duration time,
+segmented drive activation delay, and selection of INTB behavior while in Fail-safe mode. The segmented drive
+activation delay time (SEGDRVDLY) is permanently unlocked, and can be changed in real-time without entering
+CONFIG mode.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x04 INTBFS SEGDRVDLY[2] SEGDRVDLY[1] SEGDRVDLY[0] SSD_CUR[2] SSD_CUR[1] SSD_CUR[0] SSDT[2] SSDT[1] SSDT[0] —
+Write locked
+in Normal
+mode— — yes no no no yes yes yes yes yes yes —
+Default — — 0 0 0 0 1 0 0 1 0 0 —Table 35. CONFIG3 register bit readout
+Bit Bit function Logic 0 Logic 1
+INTBFS Configure the behavior of the INTB pin
+in Fail-safe modeThe state of FSENB does not affect INTB. INTB does not
+indicate the G3160 is in Fail-safe mode. [1]INTB indicates the GD3160 is in Fail-safe mode. When
+FSENB = 0, then INTB = 0.Table 36. CONFIG3 bit descriptions
+[1] Default value
+Bit value
+[2:0]Segmented drive activation delay
+SEGDRVDLY[2:0]Soft shutdown current
+SSD_CUR[2:0]Soft shutdown time duration, no scaling
+SSDT[2:0] + TIME_2 = 0[1]Soft shutdown time duration, scaled down
+SSDT[2:0] + TIME_2 = 1[1]
+0x00 0 ns [2]0.10 A 2000 ns 1000 ns
+0x01 20 ns 0.20 A 3000 ns 1500 ns
+0x02 40 ns 0.30 A 4000 ns 2000 ns
+0x03 60 ns 0.40 A 5000 ns 2500 ns
+0x04 80 ns 0.50 A [2]6000 ns[3]3000 ns [2]
+0x05 100 ns 0.70 A 7000 ns 3500 ns
+0x06 120 ns 0.90 A 8000 ns 4000 ns
+0x07 140 ns 1.00 A 9000 ns 4500 nsTable 37. CONFIG3 parameter ranges
+[1] TIME_2_is Timer scaling bit of  MODE1 register
+[2] Default value
+[3] Default value upon changing TIME_2 bit.
+11.14.6  CONFIG4 register (ADDR = 0x05)
+The CONFIG4 register contains selectable ranges for leading edge blanking, detection filter time, and the
+charge current associated with a desaturation fault, as well as the segmented drive voltage threshold. The
+segmented drive threshold value (SEGDRV_TH) is permanently unlocked, and can be changed in real-time
+without entering CONFIG mode.
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+78 / 115
+====================================================================================================
+
+========== PAGE 79 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x05 DESAT_
+FLT [1]DESAT_
+FLT [0]SEGDRV_
+TH [2]SEGDRV_
+TH [1]SEGDRV_
+TH [0]IDESAT
+[1]IDESAT
+[0]DESAT_
+LEB [2]DESAT_
+LEB [1]DESAT_
+LEB [0]—
+Write locked
+in normal
+mode— — yes yes no no no yes yes yes yes yes —
+Default — — 0 1 0 1 1 0 1 0 1 1 —Table 38. CONFIG4 register bit readout
+Bit value [2:0] Desaturation detection
+filter time
+DESAT_FLT[1:0]Segmented drive
+voltage threshold
+SEGDRV_TH[2:0]Charge current for
+desaturation detection
+IDESAT[1:0]Desaturation detection
+leading edge blanking time
+DESAT_LEB[2:0]
+0x00 70.0 ns 3.0 V 250 µA 60 ns
+0x01 110.0 ns [1]4.0 V 500 µA [1]120 ns
+0x02 190.0 ns 5.0 V 750 µA 180 ns
+0x03 300.0 ns 6.0 V [1]1000 µA 240 ns [1]
+0x04 — 7.0 V — 340 ns
+0x05 — 8.0 V — 460 ns
+0x06 — 9.0 V — 580 ns
+0x07 — 10.0 V — 700 nsTable 39. CONFIG4 parameter ranges
+[1] Default value
+11.14.7  CONFIG5 register (ADDR = 0x06)
+The CONFIG5 register contains selectable ranges for mandatory PWM deadtime, distribution of results on
+AOUT and die-to-die communication error tracking. The AOUTCONF bit determines the ratio of readings from
+the power device temperature (TSENSEA) vs. quantity determined by AOUT_SEL (including AMUXIN, VCC,
+VCCREG, VEE, and others) as reported over the AOUT pin.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x06 DEADT [3] DEADT [2] DEADT [1] DEADT [0] — AOUT
+CONF [1]AOUT
+CONF [0]COMERR
+CONF [2]COMERR
+CONF [1]COMERR
+CONF [0]—
+Write locked
+in normal
+mode— — yes yes yes yes — yes yes yes yes yes —
+Default — — 1 1 1 1 0 0 0 1 1 0 —Table 40. CONFIG5 register
+Bit value
+[3:0]PWM deadtime
+DEADT[3:0] + TIME_2 = 0[1]PWM deadtime
+DEADT[3:0] + TIME_2 = 1[1]TSENSEA vs. AOUT_SEL
+readings ratio at AOUT
+AOUTCONF[1:0]Number of errors to set a
+COMERR fault
+COMERRCONF[2:1]Number of valid messages to
+decrement COMERR counter
+COMERRCONF[0]
+0x00 0.16 µs 0.10 µs 1/1 [2]4 1 [2]
+0x01 0.24 µs 0.14 µs 1/2 8 4
+0x02 0.44 µs 0.24 µs 1/4 16 —
+0x03 0.76 µs 0.40 µs 1/8 32 [2]—
+0x04 1.04 µs 0.54 µs — — —
+0x05 1.52 µs 0.78 µs — — —
+0x06 2.04 µs 1.04 µs — — —
+0x07 2.52 µs 1.28 µs — — —Table 41. CONFIG5 parameter ranges
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+79 / 115
+====================================================================================================
+
+========== PAGE 80 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Bit value
+[3:0]PWM deadtime
+DEADT[3:0] + TIME_2 = 0[1]PWM deadtime
+DEADT[3:0] + TIME_2 = 1[1]TSENSEA vs. AOUT_SEL
+readings ratio at AOUT
+AOUTCONF[1:0]Number of errors to set a
+COMERR fault
+COMERRCONF[2:1]Number of valid messages to
+decrement COMERR counter
+COMERRCONF[0]
+0x08 3.04 µs 1.54 µs — — —
+0x09 3.52 µs 1.78 µs — — —
+0x0A 4.04 µs 2.04 µs — — —
+0x0B 4.52 µs 2.28 µs — — —
+0x0C 5.04 µs 2.54 µs — — —
+0x0D 5.52 µs 2.78 µs — — —
+0x0E 6.04 µs 3.04 µs — — —
+0x0F 6.52 µs [3]3.28 µs[2]— — —Table 41. CONFIG5 parameter ranges ...continued
+[1] TIME_2_is Timer scaling bit of  MODE1 register
+[2] Default value
+[3] Default value upon changing TIME_2 bit
+11.14.8  CONFIG6 register (ADDR = 0x07)
+The CONFIG6 register contains selectable ranges for the gate supply (VCCREG[2:0]), the LV/HV domain
+watchdog timeout (WDTO[1:0]), and the PWM/real-time feedback coherency check delay (RTMONDLY[3:0]).
+The VCCREG setpoint is permanently unlocked. It can be changed in real-time without entering CONFIG mode.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x07 VCCREG
+[2]VCCREG
+[1]VCCREG
+[0]— WDTO [1] WDTO [0] RTM
+ONDLY [3]RTM
+ONDLY [2]RTM
+ONDLY [1]RTM
+ONDLY [0]—
+Write locked
+in normal
+mode— — no no no — yes yes yes yes yes yes —
+Default — — 0 0 1 0 1 1 1 0 1 0 —Table 42. CONFIG6 register bit readout
+Bit
+value
+[3:0]Positive gate supply regulation
+setpoint
+VCCREG[2:0]Die-to-die communications watchdog
+timeout
+WDTO[1:0]PWM vs. real-time monitor
+delay
+RTMONDLY[3:0] + TIME_2 =
+0[1]PWM vs. Real-time monitor
+delay
+RTMONDLY[3:0] + TIME_2 =
+1[1]
+0x00 14.0 V 260 µs —[2]—[2]
+0x01 15.0 V [3]500 µs 400 ns —[2]
+0x02 16.0 V 1000 µs 800 ns 400 ns
+0x03 17.0 V 2000 µs [3]1200 ns 600 ns
+0x04 18.0 V — 1600 ns 800 ns
+0x05 19.0 V — 2000 ns 1000 ns
+0x06 20.0 V — 2400 ns 1200 ns
+0x07 21.0 V — 2800 ns 1400 ns
+0x08 — — 3200 ns 1600 ns
+0x09 — — 3600 ns 1800 ns
+0x0A — — 4000 ns [4]2000 ns[3]
+0x0B — — 4800 ns 2400 ns
+0x0C — — 5600 ns 2800 ns
+0x0D — — 6400 ns 3200 ns
+0x0E — — 7200 ns 3600 nsTable 43. CONFIG6 parameter ranges
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+80 / 115
+====================================================================================================
+
+========== PAGE 81 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Bit
+value
+[3:0]Positive gate supply regulation
+setpoint
+VCCREG[2:0]Die-to-die communications watchdog
+timeout
+WDTO[1:0]PWM vs. real-time monitor
+delay
+RTMONDLY[3:0] + TIME_2 =
+0[1]PWM vs. Real-time monitor
+delay
+RTMONDLY[3:0] + TIME_2 =
+1[1]
+0x0F — — 8000 ns 4000 nsTable 43. CONFIG6 parameter ranges ...continued
+[1] TIME_2_is timer scaling bit of  MODE1 register
+[2] Not used
+[3] Default value
+[4] Default value upon changing TIME_2 bit
+11.14.9  CONFIG7 register (ADDR = 0x08)
+The CONFIG7 register contains the selectable range for desaturation threshold voltage.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x08 — — — — — — DESAT_
+TH [3]DESAT_
+TH [2]DESAT_
+TH [1]DESAT_
+TH [0]—
+Write locked
+in normal
+mode— — — — — — — — yes yes yes yes —
+Default — — 0 0 0 0 0 0 1 0 1 0 —Table 44. CONFIG7 register bit readout
+Bit value [3:0] Desaturation fault threshold-voltage level
+DESAT_TH[3:0]
+0x00 1.00 V
+0x01 1.50 V
+0x02 2.00 V
+0x03 2.50 V
+0x04 3.00 V
+0x05 3.50 V
+0x06 4.00 V
+0x07 4.50 V
+0x08 5.00 V
+0x09 5.50 V
+0x0A 6.00 V [1]
+0x0B 6.50 V
+0x0C 7.00 V
+0x0D 8.00 V
+0x0E 9.00 V
+0x0F 10.00 VTable 45. CONFIG7 parameter ranges
+[1] Default value
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+81 / 115
+====================================================================================================
+
+========== PAGE 82 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+11.14.10  OT_TH register (ADDR = 0x09)
+The OT_TH register sets the threshold level for a power device overtemperature event. The post-converted
+TSENSEA result is automatically compared to this threshold to evaluate for an overtemperature fault. The
+OT_TH register is permanently unlocked; CONFIG mode is not required to modify the OT_TH register values.
+These values may be changed on-the-fly and may be changed according to system or application demands.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x09 OT_TH
+[9]OT_TH
+[8]OT_TH
+[7]OT_TH
+[6]OT_TH
+[5]OT_TH
+[4]OT_TH
+[3]OT_TH
+[2]OT_TH
+[1]OT_TH
+[0]—
+Write locked
+in normal
+mode— — no no no no no no no no no no —
+Default — — 0 0 1 1 1 1 1 1 1 1 —Table 46. OT_TH register bit readout
+The characteristic for the overtemperature shutdown threshold, given as a voltage at the TSENSEA pin, is given
+in Equation 4 .
+ 
+(4)
+ 
+11.14.11  OTW_TH register (ADDR = 0x0A)
+The OTW_TH register sets the threshold level for a power device overtemperature warning event. The post-
+converted TSENSEA result is automatically compared to this threshold to evaluate for an overtemperature
+warning condition. The OTW_TH register is permanently unlocked, CONFIG mode is not required to modify the
+OTW_TH register values. These values may be changed on-the-fly and may be changed according to system
+or application demands.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x0A OTW_TH
+[9]OTW_TH
+[8]OTW_TH
+[7]OTW_TH
+[6]OTW_TH
+[5]OTW_TH
+[4]OTW_TH
+[3]OTW_TH
+[2]OTW_TH
+[1]OTW_TH
+[0]—
+Write locked
+in normal
+mode— — no no no no no no no no no no —
+Default — — 1 1 1 1 1 1 1 1 1 1 —Table 47. OTW_TH (IGBT overtemperature warning threshold register)
+The characteristic for the overtemperature warning shutdown threshold, given as a voltage at the TSENSEA
+pin, is given in Equation 5 .
+ 
+(5)
+ 
+11.14.12  STATUS1 register (ADDR = 0x0B)
+The STATUS1 register details fault status. Fault bits are cleared on power up, and if not masked, upon a fault
+the corresponding fault bit is set to '1' and latched. Write '1' operations to the STATUS1 register are used to
+clear latched faults (the GD3160 does not need to be in CONFIG mode to do this) and return the device to
+normal functionality.
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+82 / 115
+====================================================================================================
+
+========== PAGE 83 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x0B VCCOV VCCREGUV VSUPOV OTSD_IC OTSD OTW CLAMP DESAT SC OC —
+Default — — 0 0 0 0 0 0 0 0 0 0 —Table 48. STATUS1 register bit readout
+Bit Logic 1 indicates: Fault latched PWMing disabled IGBT turn off method
+VCCOV VCC overvoltage Yes Yes, GL = 1, AMC = 1 if
+enabledNormal
+VCCREGUV [1]VCCREG undervoltage Yes Yes, GL = 1, AMC = 1 if
+enabledNormal
+VSUPOV VSUP overvoltage Yes Yes, GL = 1, AMC = 1 if
+enabledNormal
+OTSD_IC Overtemperature shutdown of
+LV domain or HV domainYes Yes, GL = 1, AMC = 1 if
+enabledNormal
+OTSD Overtemperature shutdown of
+IGBTYes Yes, GL = 1, AMC = 1 if
+enabledNormal
+OTW Overtemperature warning of
+IGBTYes No Not turned off
+CLAMP [2]VCE clamp event Yes Yes, GL = 1, AMC = 1 if
+enabledISSD defaults to lowest setting
+DESAT VCE desaturation event Yes Yes, GL = 1, AMC = 1 if
+enabledSSD, 2LTO if enabled
+SC IGBT short-circuit Yes Yes, GL = 1, AMC = 1 if
+enabledSSD, 2LTO if enabled
+OC IGBT overcurrent Yes No SSD, if enabledTable 49. STATUS1 register description
+[1] At power up, a VCCREGUV fault should not be latched or reported. The UV_LATCH bit allows PWMing if the VCCREG supply recovers from an UV
+condition. INTB follows fault condition.
+[2] During V CE clamp activation, ISSD is activated regardless of the SSD mode bit.
+11.14.13  MSK1 register (ADDR = 0x0C)
+The MSK1 register determines bit-for-bit the faults to be reported to INTB or INTA from the STATUS1 register.
+The GD3160 must be in CONFIG mode for the mask settings to be changed. A value of 0 for the fault mask bit
+means that the corresponding fault is masked, a value of 1 means that the corresponding fault is unmasked.
+Response when masked or unmasked for each fault is described in Table 73 . Not all faults may be masked
+(such as SC and DESAT).
+Rb/
+WADDR [4:0] DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x0C VCCOVM VCCREGUVM VSUPOVM — OTSDM OTWM CLAMPM — — OCM —
+Write locked
+in normal
+mode— — yes yes yes — yes yes yes — — yes —
+Default — — 1 1 0 0 0 0 1 0 0 1 —Table 50. MSK1 register bit readout
+Bit Logic 0 = masked Logic 1 = not masked
+VCCOVM PWMing remains enabled, fault not latched or reported. PWM disabled. GL = 1, AMC = 1 if enabled.
+VCCREGUVM [1]PWMing remains enabled until VCC falls below
+VCC UV_TH .PWM disabled. GL = 1, AMC = 1 if enabled.Table 51. MSK1 register description
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+83 / 115
+====================================================================================================
+
+========== PAGE 84 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Bit Logic 0 = masked Logic 1 = not masked
+VSUPOVM PWMing remains enabled, fault not latched or reported. PWM disabled. GL = 1, AMC = 1 if enabled.
+OTSDM PWMing remains enabled, OTSD fault not latched or
+reported. Temp reported in ADCVAL and AOUT.PWM disabled. GL = 1, AMC = 1 if enabled.
+OTWM PWMing remains enabled, OTW fault not latched or
+reported. Temp reported in ADCVAL.PWM enabled.
+CLAMPM PWMing remains enabled, clamp active, fault not
+latched or reported.PWM disabled. GL = 1, AMC = 1 if enabled.
+OCM No mask. PWM enabled.Table 51. MSK1 register description ...continued
+[1] At power up, a VCCREGUV fault should not be latched or reported. The UV_LATCH bit (in CONFIG1) allows PWMing if the VCCREG supply recovers
+from an UV condition. INTB follows fault condition. SPI bit is latched.
+11.14.14  RMSK1 register (ADDR = 0x0D)
+The RMSK1 register values determine which interrupt pin (either INTB or INTA) an unmasked fault is to be
+reported. A value of '0' reports the fault to INTB, and a value of '1' reports the fault to INTA. Recall that for INTA
+to be configured as a fault pin, the RTRPT bit must be set accordingly in the MODE2 register.
+Rb/
+WADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x0D VCCOVA VCCREGUVA VSUPOVA OTSD_ICA OTSDA OTWA CLAMPA DESATA SCA OCA —
+Write locked
+in normal
+mode— — yes yes yes yes yes yes yes yes yes yes —
+Default — — 0 0 0 0 1 0 0 1 1 0 —Table 52. RMSK1 register bit readout
+Bit Bit function Logic 0 Logic 1
+VCCOVA Select INTx pin to report VCCOV fault to Report fault on INTB [1]Report fault on INTA
+VCCREGUVA Select INTx pin to report VCCREGUV fault to Report fault on INTB [1]Report fault on INTA
+VSUPOVA Select INTx pin to report VSUPOV fault to Report fault on INTB [1]Report fault on INTA
+OTSD_ICA Select INTx pin to report OTSD_IC fault to Report fault on INTB [1]Report fault on INTA
+OTSDA Select INTx pin to report OTSD fault to Report fault on INTB Report fault on INTA [1]
+OTWA Select INTx pin to report OTW fault to Report fault on INTB [1]Report fault on INTA
+CLAMPA Select INTx pin to report CLAMP fault to Report fault on INTB [1]Report fault on INTA
+DESATA Select INTx pin to report DESAT fault to Report fault on INTB Report fault on INTA [1]
+SCA Select INTx pin to report SC fault to Report fault on INTB Report fault on INTA [1]
+OCA Select INTx pin to report OC fault to Report fault on INTB [1]Report fault on INTATable 53. RMSK1 register description
+[1] Default value
+11.14.15  STATUS2 register (ADDR = 0x0E)
+The STATUS2 register details fault status. Fault bits are cleared on power up, and if not masked, upon a fault
+the corresponding fault bit is set to '1' and latched. Write '1' operations to the STATUS2 register are used to
+clear latched faults and return the device to normal functionality.
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+84 / 115
+====================================================================================================
+
+========== PAGE 85 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x0e BIST_FAIL VDD_UVOV DTFLT SPIERR CONFCRCERR RTMON_
+FLTWDOG_FLT COMERR VREF_UV VEE_OOR —
+Default — — 0 0 0 0 0 0 0 0 0 0 —Table 54. STATUS2 register bit readout
+Bit Logic 1 indicates: Fault
+latchedPWMing disabled IGBT turn OFF method
+BIST_FAIL[1]BIST failure. Yes Yes, GL = 1, AMC = 1 if enabled Normal
+VDD_UVOV[2]VDD out of range. Yes Yes, GL = 1, AMC = 1 if enabled Normal
+DTFLT PWM deadtime violation. Yes No —
+SPIERR SPI framing or CRC error. Yes No —
+CONFCRCERR LV domain or HV domain detected a CRC
+change in its CONFIG registers.Yes Yes, GL = 1, AMC = 1 if enabled Normal
+RTMON_FLT Only valid if RTMON_CFG=0. LV domain
+detected that VGE(RTMON_CFG = 0) is
+not tracking commanded state.Yes Yes, GL = 1, AMC = 1 if enabled Normal
+WDOG_FLT LV domain or HV domain detects a loss of
+LV/HV domain communication.Yes Yes, GL = 1, AMC = 1 if enabled Normal
+COMERR LV/HV domain communications CRC error
+or framing error.Yes Yes, GL = 1, AMC = 1 if enabled Normal
+VREF_UV[3]VREF out of range. Yes Yes, GL = 1, AMC = 1 if enabled Normal
+VEE_OOR VEE out of range. Yes Yes, GL = 1, AMC = 1 if enabled NormalTable 55. STATUS2 register description
+[1] BIST_FAIL bit provides pass/fail results. Detailed BIST results are placed in the REQBIST register. REQBIST bits persist until a new BIST is conducted.
+[2] VDD_UVOV fault bit is not be set at power up. If VDD is shorted at power up, a VDD_UVOV fault is not reported and the MCU infers a VDD fault from
+other behaviors.
+[3] VREF fault bit is not set at power up. If VREF is shorted at power up, a VREF fault is not reported and the MCU infers a VREF fault from other behaviors.
+11.14.16  MSK2 register (ADDR = 0x0F)
+The MSK2 register determines bit-for-bit the faults to be reported to INTB or INTA from the STATUS2 register.
+The GD3160 must be in CONFIG mode for the mask settings to be changed. Not all faults may be masked
+(such as BIST_FAIL and VDD_UVOV).
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x0F — — DTFLTM SPIERRM CONFCR
+CERRMRTMON_
+FLTMWDOG_
+FLTMCOMERRM — VEE_
+OORM—
+Write locked
+in normal
+mode— — — — yes yes yes yes yes yes — yes —
+Default — — 0 0 1 1 1 0 1 1 0 0 —Table 56. MSK2 register bit readout
+Bit Bit function Logic 0 Logic 1
+DTFLTM Deadtime fault mask. PWMing remains enabled, fault not
+latched or reported, programmed PWM
+deadtime is enforced.PWM enabled.Table 57. MSK2 register description
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+85 / 115
+====================================================================================================
+
+========== PAGE 86 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Bit Bit function Logic 0 Logic 1
+SPIERRM SPI CRC or framing error fault mask. PWMing remains enabled, fault not
+latched or reported.PWM enabled.
+CONFCRCERRM LV or HV domain CONF register CRC error
+mask.PWMing remains enabled, fault not
+latched or reported.PWM disabled. GL = 1, AMC = 1 if
+enabled.
+RTMON_FLTM RTMON error mask. PWMing remains enabled, fault not
+latched or reported.PWM disabled. GL = 1, AMC = 1 if
+enabled.
+WDOG_FLTM [1]Watchdog fault mask. PWMing remains enabled, fault not
+latched or reported, periodic REQADC
+continues.PWM disabled. GL = 1, AMC = 1 if
+enabled.
+COMERRM Internal communications fault mask. PWMing remains enabled, fault not
+latched or reported.PWM disabled. GL = 1, AMC = 1 if
+enabled.
+VEE_OORM VEE out of range fault mask. PWMing remains enabled, fault not
+latched or reported.PWM disabled. GL = 1, AMC = 1 if
+enabled.Table 57. MSK2 register description ...continued
+[1] WDOG_FLT indicates LV domain received NO message in response to one of the periodic LV domain DATA messages. This bit should be used only for
+debug purposes. This bit defaults to "unmasked" at power up.
+11.14.17  RMSK2 register (ADDR = 0x10)
+The RMSK2 register values determine which interrupt pin (either INTB or INTA) an unmasked fault is to be
+reported. Not all STATUS2 faults can be reported at INTA (such as BIST_FAIL, VDD_UVOV, and so on.).
+A value of '0' reports the fault to INTB, and a value of '1' reports the fault to INTA. Recall that for INTA to be
+configured as a fault pin, the RTRPT bit must be set accordingly in the MODE2 register.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x10 — — DTFLTA — — — — — VREF_UVA VEE_OORA —
+Write locked in
+normal mode— — — — yes — — — — — yes yes —
+Default — — 0 0 0 0 0 0 0 0 1 0 —Table 58. RMSK2 register bit readout
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+86 / 115
+====================================================================================================
+
+========== PAGE 87 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Bit Bit function Logic 0 Logic 1
+DTFLTA Select INTx pin to report DTFLT fault to Report fault on INTB [1]Report fault on INTA
+VREF_UVA Select INTx pin to report VREF_UV fault to Report fault on INTB Report fault on INTA [1]
+VEE_OORA Select INTx pin to report VEE_OOR fault to Report fault on INTB [1]Report fault on INTATable 59. RMSK2 register description
+[1] Default value
+11.14.18  STATUS3 register (ADDR = 0x11)
+The STATUS3 pin reports critical GD3160 control and status pin states, after deglitch. The MCU can monitor
+pin state bits (i.e. PWM, PWMALT, FSSTATE, FSENB) to check circuit integrity. A change in the deglitched logic
+pin state is reflected in the corresponding bit within 1 µs. The POR recovery bits (POR_1, POR_2) will only
+read '1' following a POR event or after BIST operation; they will read '0' following a software reset command or
+after writing a '1' to these bits. If INTA is configured to report faults, the INTA and VRTMON may report different
+values.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x11 POR_1 POR_2 FSISO PWM PWMALT FSSTATE FSENB INTB INTA VRTMON —
+Default — — 1 1 — — — — — — — — —Table 60. STATUS3 register
+Bit Bit function Logic 0 Logic 1
+POR_1 Report LV die recovery from POR LV die POR recovery bit has been cleared Notification of LV die recovery from POR
+POR_2 Report HV die recovery from POR HV die POR recovery bit has been cleared Notification of HV die recovery from POR
+FSISO Report FSISO pin state FSISO pin is logic low FSISO pin is logic high
+PWM Report PWM pin state PWM pin is logic low PWM pin is logic high
+PWMALT Report PWMALT pin state PWMALT pin is logic low PWMALT pin is logic high
+FSSTATE Report FSSTATE pin state FSSTATE pin is logic low FSSTATE pin is logic high
+FSENB Report FSENB pin state FSENB pin is logic low FSENB pin is logic high
+INTB Report INTB pin state INTB pin is logic low INTB pin is logic high
+INTA Report INTA pin state INTA pin is logic low INTA pin is logic high
+VRTMON Report the state of the quantity under
+real-time monitoring/reporting (VGE)
+or reporting (VCE):
+•When RTMON_CFG= 0: VGE
+•When RTMON_CFG = 1: VCE
+[1] [2]VGE: VGE is low (power device is OFF)
+VCE: VCE is high (power device is OFF)VGE: VGE is high (power device is ON)
+VCE: VCE is low (power device is ON)Table 61. STATUS3 register description
+[1] By default, VRTMON reports the VGE state. This is due to the default RTMON_CFG = 0 in the MODE2 register.
+[2] The RTMON_CFG bit in MODE2 determines the quantity to report to the VTRMON. This must be changed during CONFIG mode.
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+87 / 115
+====================================================================================================
+
+========== PAGE 88 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+11.14.19  CONFIGAOUT register (ADDR = 0x12)
+The CONFIGAOUT register determines the second quantity reported on AOUT, the magnitude of temperature-
+sense current, and sets the ADC offset and range for the AMUXIN and TSENSEA inputs. The CONFIGAOUT
+register is permanently unlocked; CONFIG mode is not required to modify the CONFIGAOUT register values.
+These values are configurable on-the-fly and may be changed according to system or application demands.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0/1 0x12 ITSNS[1] ITSNS[0] TOFST[1] TOFST[0] TRNG AMUXINRNG AMUXINOS[1] AMUXINOS[0] AOUT_
+SEL [1]AOUT_
+SEL [0]—
+Write locked in
+normal mode— — no no no no no no no no no no —
+Default — — 1 1 0 0 0 0 0 0 0 0 —Table 62. CONFIGAOUT register bit readout
+Bits Bit function
+ITSNS[1:0] TSENSEA current source magnitude. See Table 64  for values.
+TOFST[1:0] TSENSEA offset selection. See Table 64  for values.
+TRNGSelect the full-scale range for TSENSEA ADC:
+•TRNG = 0: full-scale range = 5 V [1]
+•TRNG = 1: full-scale range = 1 V
+AMUXRNGSelect the full-scale range for the AMUXIN ADC:
+•AMUXRNG = 0: full-scale range = 5 V [1]
+•AMUXRNG = 1: full-scale range = 1 V
+AMUXINOS[1:0] AMUXIN offset selection. See Table 64  for values.
+AOUT_SEL[1:0] Select the 2nd quantity reported to the AOUT pin. See Table 64  for selections.Table 63. CONFIGAOUT bit description
+[1] Default value
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+88 / 115
+====================================================================================================
+
+========== PAGE 89 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Bit value [1:0] ITSNS[1:0] TOFST[1:0] AMUXINOS[1] AOUT_SEL[1:0]
+0x00 0.25 mA 0.0 V[1]0.0 V[1]VCCREG
+0x01 0.50 mA 0.5 V 0.5 V AMUXIN
+0x02 0.75 mA 1.0 V 1.0 V VCC
+0x03 1.00 mA[1]1.5 V 1.5 V VEETable 64. CONFIGAOUT parametric ranges
+[1] Default value
+11.14.20  ADC request and response (ADDR = 0x13)
+The REQADC command will convert the requested quantity and respond with the result over SPI. The
+REQADC request is delivered as a "read" command (leading MSB = 0), with the four LSBs indicating the
+quantity to be read, given in Table 66 . A REQADC command/request delivered as a write (leading MSB = 1)
+is an invalid command and ignored. The REQADC response includes the identical address as the command
+(ADDR[4:0] = 0x13) followed by the 10-bit data.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+REQADC
+(request)0 0x13 — — — — — — AMUX_
+SEL [3]AMUX_
+SEL [2]AMUX_
+SEL [1]AMUX_
+SEL [0]—
+REQADC
+(response)0 0x13 ADCVAL
+[9]ADCVAL
+[8]ADCVAL
+[7]ADCVAL
+[6]ADCVAL
+[5]ADCVAL
+[4]ADCVAL
+[3]ADCVAL
+[2]ADCVAL
+[1]ADCVAL
+[0]—Table 65. REQADC request and response bit readout
+AMUX_SEL[3:0] AMUX selection reported in REQADC response Other relevant settings
+0x00 VCCREG —
+0x01 AMUXIN •AMUXINOS[1:0]
+•AMUXINRNG
+0x02 VCC —
+0x03 VEE —
+0x04 Power device temperature •ITSNS[1:0]
+•TRNG
+•TOFST[1:0]
+0x05 Die temperature (GH) —
+0x06 – 0x0F Not used —Table 66. REQADC request selections
+See Section 11.12.2  for further information interpreting post-converted results.
+11.14.21  BIST request and response (ADDR = 0x14)
+The REQBIST command reads and reports the results of the latest built-in self-test (BIST) critical for safety-
+critical, high ASIL-level applications. After completing BIST, send a REQBIST command to elaborate on the
+result. A circuit passing BIST receives a REQBIST = 0 bit value, a failed circuit is indicated by a REQBIST =
+1 bit value. Unlike the BIST itself, the REQBIST request does not need to be initiated while the GD3160 is in
+configuration mode. REQBIST bits persist until a new BIST is conducted or POR occurs. SPI is inactive while
+the BIST is running.
+For other details on the BIST operation, see Section 11.16 . For a recommended BIST procedure, see
+Section 12.2 .
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+89 / 115
+====================================================================================================
+
+========== PAGE 90 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+REQUEST BIST
+(command)0 0x14 0 0 0 0 0 0 0 0 0 0 —
+REQUEST BIST
+(response)0 0x14 REQBIST
+[9]REQBIST
+[8]REQBIST
+[7]REQBIST
+[6]REQBIST
+[5]REQBIST
+[4]REQBIST
+[3]REQBIST
+[2]REQBIST
+[1]REQBIST
+[0]—Table 67. REQBIST request and response bit readout
+Bit Logic 1 indicates BIST failure in:
+REQBIST[9] DATA_IN, DATA_OUT communications link.
+REQBIST[8] LV domain LBIST, logic state machine, timers, or combinational logic.
+REQBIST[7] HV domain LBIST, logic state machine, timers, or combinational logic.
+REQBIST[6] Oscillator failure (LV or HV domain).
+REQBIST[5] DESAT and/or SEGDRV comparators.
+REQBIST[4] ISENSE short-circuit, overcurrent comparators.
+REQBIST[3] LV or HV domain overtemperature protection.
+REQBIST[2] ADC failure (HV domain).
+REQBIST[1] LV domain power management, diagnostics, UV/OV monitors.
+REQBIST[0] HV domain power management, diagnostics, UV/OV monitors.Table 68. REQBIST bit descriptions
+11.14.22  Device ID (ADDR = 0x15)
+The ID registers provides revision and version information on the LV and HV domain die each.
+Rb/W ADDR
+[4:0]DATA9 DATA8 DATA7 DATA6 DATA5 DATA4 DATA3 DATA2 DATA1 DATA0 CRC
+Bit # [23] [22:18] [17] [16] [15] [14] [13] [12] [11] [10] [9] [8] [7:0]
+Name/Value 0 0x15 — — VDD3 LVDC[2] LVDC[1] LVDC[0] FS3ST HVDC[2] HVDC[1] HVDC[0] —
+Default 0 — 0 0 — — — — — — — — —Table 69. ID register bit readout
+Bits Bit description
+VDD3VDD selection:
+VDD3 = 1 VDD = 5 V
+VDD3 = 0 VDD = 3 V
+LVDC[2:0]Low-voltage (LV) domain die revision number
+LVDC[2:0] = '100'
+FS3STFSISO Tristate selection:
+FS3ST = 0 On state selected (default)
+FS3ST = 1 3-state selected
+HVDC[2:0]High-voltage (HV) domain die revision number
+HVDC[2:0] = '100'Table 70. ID bit description
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+90 / 115
+====================================================================================================
+
+========== PAGE 91 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+11.15  Low-voltage domain to high-voltage domain communications
+11.15.1  Introduction
+The GD3160 integrates communications channels between the low-voltage (LV) domain connected to the
+MCU, and the high-voltage (HV) domain connected to the IGBT/SiC power device. These channels are mostly
+transparent to the user, but enable critical controls, configurability, as well as fault and status reporting.
+All LV/HV domain communications are protected by 8-bit CRC (checked on both domains). These domain
+communications are initiated with regularity and supervised by a watchdog, again on both domains. This
+contributes to the ASIL level of the GD3160 and system.
+11.15.2  Overview of low-voltage (LV) communications
+The LV domain receives inputs from the MCU and originates communication messages to the HV domain. The
+LV domain also receives a real-time status from the HV domain and might react to it according to the GD3160’s
+configuration.
+The LV domain retrieves converted ADC data from the HV domain on a regular basis using the watchdog
+routine. The LV domain stores the most recently acquired data and provides this to the AOUT pin. If the user
+requests the same data over a REQADC SPI command, a new LV/HV domain command is not initiated and the
+stored data is reported.
+The GD3160 uses dynamic scheduling of watchdog and other LV/HV domain communications to try to avoid
+PWM edges (frequently the most electrically disruptive activity in the gate driver IC) and execute precision
+operations during idle PWM times. The GD3160 will attempt to schedule the next LV/HV communications during
+the longest idle time of the PWM cycle – or if the frequency is too fast, it prefers to schedule after PWM edges.
+Duty cycle condition Scheduling
+d < 50 % During PWM low
+d > 50 % During PWM high
+Very fast frequency After PWM highTable 71. Watchdog scheduling according to PWM
+The GD3160 will also manage interruptions to the LV/HV communications and retry message transmission after
+the PWM is idle. For example, if a PWM edge is received during a SPI command, the GD3160 will suspend
+internal LV/HV communications, throw out the command, and retry transmission. There is no internal error
+(COMERR) reported for this case.
+No command is sent to the HV domain in the case of a SPI error (SPIERR) or invalid address request.
+Transitions in CSB that are not accompanied by SCLK activity do not result in an LV/HV message being sent,
+and no SPIERR or COMERR is reported.
+11.15.3  Overview of high-voltage (HV) communications
+The HV domain continuously relays real-time status of the HV domain and power device to the LV domain.
+Otherwise, the HV domain behaves as a communications responder, only replying to commands originating
+from the LV domain.
+If the HV domain does not see a command from the LV domain within the watchdog timeout period, the HV
+domain will latch a fault, notify the LV domain, and latch off the gate outputs.
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+91 / 115
+====================================================================================================
+
+========== PAGE 93 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+11.16  Built-in self-test
+11.16.1  BIST overview
+The GD3160's built-in self-test (BIST) is critical in helping meet its ASIL/SIL safety metrics. The BIST, including
+logic BIST/LBIST and analog BIST/ABIST, checks all key safety mechanisms and other circuits used in general
+operation:
+•LV domain power management, diagnostics, UV/OV monitors (VSUP, VDD)
+•HV domain power management, diagnostics, UV/OV monitors (VCC, VCCREG, VREF, VEE out of range)
+•ISENSE short-circuit (SC) and overcurrent (OC) comparators
+•LV and HV overtemperature comparators
+•Clock loss/oscillator failure
+•ADC conversion failure
+•Desaturation fault and segmented drive comparators
+•Logic block BIST, on both LV and HV domains
+•LV/HV domain communications
+The BIST process is described in Section 11.16.2 . Figure 40  and Figure 41  show the INTB, INTA, and AOUT
+output pin states. One important note on configuring VEEM before running the BIST is given in Section 11.16.3 .
+BIST passed
+BIST
+complete28 ms
+maxBIST
+modeconfig.
+modeconfig.
+modenormal
+modemode
+INTB
+INTA
+AOUT
+SPI
+messagenormal
+mode
+CONFIG_EN = 1 BIST = 1 BIST = 0 CONFIG_EN = 0
+aaa-037348
+Figure 40. Successfully completed BIST sequence
+The BIST result is reported on INTB when the BIST bit is set to '0' by a SPI command to exit BIST mode. If any
+portion of the low-voltage domain or high-voltage domain BIST sequence fails, the INTB pin behaves as shown
+in Figure 41 . In this case, INTB is pulled low when the device enters Configuration mode, the BIST_FAIL bit in
+STATUS2 register is latched to Logic 1, the circuit that failed BIST is identified in the REQBIST register, and the
+IGBT gate drive output is forced to the OFF state. The BIST fault bit reported by the SPI is a logic OR of the
+BIST faults of both low-voltage domain and high-voltage domain.
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+93 / 115
+====================================================================================================
+
+========== PAGE 94 ==========
+NXP SemiconductorsGD3160
+Advanced IGBT/SiC gate driver
+Figure 41. BIST sequence with failure
+If the GD3160  fails the BIST test, it can be queried to determine the source of the failure. To accomplish this,
+the MCU sends a REQBIST command, whereupon it receives a response indicating which of 10 sub-circuits
+reported the failure.
+Power cycling only one domain resets the logic and BIST result of that domain only; the other domain is
+preserved, and the ORed BIST result of the whole device (seen at the BIST_FAIL bit) is refreshed.
+BIST relies on the VEE_OORM mask setting to determine whether it should test VEE monitoring circuitry or not.
+The GD3160 interprets a VEE_OORM = 0 as a system without a negative supply, and not check VEE monitor
+circuits. Setting VEE_OORM = 1 confirms a negative supply is expected, and VEE monitor circuits are checked.
+BIST configuration and use are described in Section 12 .
+11.16.2  BIST process
+The GD3160 can only enter BIST from Configuration mode (in MODE2 register, CONFIG_EN = 1). Any other
+BIST request initiated while the device is not in Configuration mode is ignored. BIST starts once a Logic 1 is
+written to the BIST bit in the MODE2 register, while the device was already in Configuration mode.
+The GD3160 output pins INTB, INTA, and AOUT provide a way for the MCU to monitor BIST progress, as well
+as validate pin connections and ensure proper functionality of INTB, INTA, and AOUT features. Upon starting
+BIST, INTB, INTA are pulled low and, after a maximum delay of 250 μs, AOUT reports 0 % duty cycle (pulled
+low). During BIST, the gate is latched off and the PWM control is disabled (until BIST = 0 and the device is no
+longer in Configuration mode). Allow 28 ms for BIST completion.
+Upon completion of the BIST tasks, INTB and INTA go to Logic 1 and AOUT returns a 10 % fixed duty cycle.
+The GD3160 remains in Configuration mode (CONFIG_EN = 1) and returns all configuration register contents to
+their default states. Refer to Section 11.14  for information on default register states. The BIST results are loaded
+to the REQBIST register, and results are ORed into the BIST_FAIL bit (STATUS2 register) bit. Upon exit of the
+BIST mode (set BIST = 0), the BIST_FAIL result is loaded to the INTB pin state.
+The BIST results are stored in the REQBIST register after BIST completes (setting BIST = 0 is not required) and
+may be read anytime, until a POR occurs or BIST is run again. Cycling power on the LV die resets LV die logic,
+but not HV die or the ORed response of all BIST faults.
+GD3160 All information provided in this document is subject to legal disclaimers. © 2025 NXP B.V. All rights reserved.
+Product data sheet Rev. 15.0 — 14 July 2025 Document feedback
+94 / 115
+====================================================================================================

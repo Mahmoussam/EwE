@@ -18,7 +18,7 @@ class GDStatusWindow(QtWidgets.QMainWindow):
         self.__dispatcher = serial_dispatcher
         
         # Load the UI with absolute path
-        ui_path = os.path.join(os.path.dirname(__file__), "UIs", "status_gui.ui")
+        ui_path = os.path.join(os.path.dirname(__file__), "status_gui.ui")
         uic.loadUi(ui_path, self)
         
         # Set window properties
@@ -59,7 +59,7 @@ class GDStatusWindow(QtWidgets.QMainWindow):
         
         try:
             # Get the screenshots directory
-            screenshots_dir = os.path.join(os.path.dirname(__file__), "screenshots")
+            screenshots_dir = os.path.join(os.path.dirname(__file__), "..", "screenshots")
             
             # Generate timestamp for filename
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

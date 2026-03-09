@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="images">
+    <file>images/current_sense_tab.png</file>
+    <file>images/desat_seg_drive_tab.png</file>
+    <file>images/gate_drive_tab.png</file>
+    <file>images/over_temperature_tab.png</file>
+    <file>images/uv_ov_tab.png</file>
+  </qresource>
+</RCC>

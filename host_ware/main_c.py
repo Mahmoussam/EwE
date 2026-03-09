@@ -7,7 +7,7 @@ import asyncio
 from qasync import QEventLoop, asyncSlot
 
 from E_Serial import *
-from status_window import GDStatusWindow
+from UIs.gd_control_panel import GDControlPanel
 
 
 class MyWindow(QtWidgets.QMainWindow):
@@ -64,7 +64,7 @@ class MyWindow(QtWidgets.QMainWindow):
         # Check if required UI files exist
         required_ui_files = {
             "UIs/main_gui.ui": "Main window UI",
-            "UIs/status_gui.ui": "Status window UI"
+            "UIs/gd_control_panel.ui": "GD Control Panel UI"
         }
         
         missing_files = []
@@ -258,12 +258,12 @@ class MyWindow(QtWidgets.QMainWindow):
         print('[!]__on status update' , status)
         if status:
             self.__ComConnectionState = True
-            # Create and show a new status window, pass dispatcher instead of worker
-            self.__status_window = GDStatusWindow(self.__dispatcher)
+            # Create and show a new control panel, pass dispatcher instead of worker
+            self.__status_window = GDControlPanel(self.__dispatcher)
             self.__status_window.show()
         else:
             self.__ComConnectionState = False
-            # Terminate status window if it exists
+            # Terminate control panel if it exists
             if self.__status_window is not None:
                 self.__status_window.close()
                 self.__status_window.deleteLater()

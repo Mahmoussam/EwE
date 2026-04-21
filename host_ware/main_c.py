@@ -43,7 +43,8 @@ class MyWindow(QtWidgets.QMainWindow):
         self.WriteAddrInput.returnPressed.connect(lambda: self.WriteValInput.setFocus())
         # initial ports scan
         self.ComRefreshButton_clicked()
-        
+        #self.__status_window = GDControlPanel(self.__dispatcher)
+        #self.__status_window.show()
     def __startup_validation(self):
         """Validate that all required directories and files exist"""
         base_dir = os.path.dirname(__file__)

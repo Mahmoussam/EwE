@@ -14,6 +14,10 @@
 #include <stdint.h>
 #include "GD3160_map.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**************************************************************/
 // Misc
 /**************************************************************/
@@ -1285,6 +1289,10 @@ typedef enum ReqAdcAmux
 //////////////////////////////////////////////////////////////////////////////////////////
 unsigned char Calculate_SPI_CRC(uint16_t wData);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 
 

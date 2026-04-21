@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
-#include "../GD3160/GD3160.h"
+#include "../../GD3160/GD3160.h"
 /**
  * CRC function that utilizes same concept of the lookup table..
  */
@@ -12,8 +12,8 @@ uint8_t CALC_CRC8_shift(uint16_t wData);
 
 int32_t main(){
 
-    printf("Test val for 0x3100 : 0X%0X \n" ,Calculate_SPI_CRC(0x3100));
-    printf("Test val for 0x1234 : 0X%0X \n" ,Calculate_SPI_CRC(0x1234));
+    printf("Test val for 0x34 : 0X%0X \n" ,Calculate_SPI_CRC(0x34));
+    printf("Test val for 0x0 : 0X%0X \n" ,Calculate_SPI_CRC(0x0));
     for(uint32_t test_data = 0;test_data < (((uint32_t)1)<<16);test_data++){
         //assert(Calculate_SPI_CRC(test_data) == CALC_CRC8_table(test_data));
         if(Calculate_SPI_CRC(test_data) != CALC_CRC8_table(test_data)){

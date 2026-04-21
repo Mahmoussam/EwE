@@ -65,6 +65,25 @@
      </widget>
     </item>
     <item>
+     <widget class="QSpinBox" name="DChainLengthSpinBox">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>40</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <number>6</number>
+      </property>
+      <property name="value">
+       <number>1</number>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="ComConnectButton">
       <property name="maximumSize">
        <size>
@@ -178,54 +197,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="WriteAddrInput">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Address to write Hex value to , limited to 5 bits address</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="3">
-        <widget class="QLineEdit" name="ReadValOutput">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>The value read at specified address within DUT</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="3">
-        <widget class="QLineEdit" name="ReadAddrInput">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Address to read Hex value from limited to 5 bits address</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="WriteValInput">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="toolTip">
-          <string>Hex Value to write at specified Address</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
         <widget class="QLabel" name="label_4">
          <property name="font">
           <font>
@@ -235,6 +207,19 @@
          </property>
          <property name="text">
           <string>Read Addr:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLabel" name="label_5">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Read Val:</string>
          </property>
         </widget>
        </item>
@@ -251,43 +236,13 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="3">
-        <widget class="QPushButton" name="ReadValButton">
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>30</height>
-          </size>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="WriteAddrInput">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
-         <property name="font">
-          <font>
-           <pointsize>9</pointsize>
-           <weight>50</weight>
-           <bold>false</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Read</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QLabel" name="label_5">
-         <property name="font">
-          <font>
-           <family>Consolas</family>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Read Val:</string>
+         <property name="toolTip">
+          <string>Address to write Hex value to , limited to 5 bits address</string>
          </property>
         </widget>
        </item>
@@ -311,6 +266,77 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="4">
+        <widget class="QLineEdit" name="ReadAddrInput">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>Address to read Hex value from limited to 5 bits address</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="WriteValInput">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>Hex Value to write at specified Address</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="4">
+        <widget class="QPushButton" name="ReadValButton">
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Read</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QLineEdit" name="ReadValOutput">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>The value read at specified address within DUT</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QComboBox" name="DXComboBox">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -326,7 +352,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Run Script</string>
+    <string>######</string>
    </property>
   </widget>
  </widget>

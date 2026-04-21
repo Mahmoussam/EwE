@@ -113,13 +113,14 @@ class SerialDispatcher(QObject):
             timeout_handle.cancel()
             self._pending.pop(mid, None)
     
-    async def read_register(self, addr: int, timeout: float = 5.0) -> int:
+    async def read_register(self, addr: int, timeout: float = 5.0, dx: int = 0) -> int:
         """
         Convenience method to read a register and return its value.
         
         Args:
             addr: Register address to read
             timeout: Timeout in seconds
+            dx: Zero-based daisy-chain index
             
         Returns:
             int: The data value from the response
@@ -127,11 +128,11 @@ class SerialDispatcher(QObject):
         Raises:
             asyncio.TimeoutError: If no response received within timeout
         """
-        msg = ReadMessage(addr)
+        msg = ReadMessage(addr, dx=dx)
         response = await self.send_request(msg, timeout=timeout)
         return response._data
     
-    async def write_register(self, addr: int, data: int, timeout: float = 5.0) -> SerialMessage:
+    async def write_register(self, addr: int, data: int, timeout: float = 5.0, dx: int = 0) -> SerialMessage:
         """
         Convenience method to write a register and await acknowledgment.
         
@@ -139,6 +140,7 @@ class SerialDispatcher(QObject):
             addr: Register address to write
             data: Data value to write
             timeout: Timeout in seconds
+            dx: Zero-based daisy-chain index
             
         Returns:
             SerialMessage: The response/acknowledgment message
@@ -146,7 +148,7 @@ class SerialDispatcher(QObject):
         Raises:
             asyncio.TimeoutError: If no response received within timeout
         """
-        msg = WriteMessage(addr, data)
+        msg = WriteMessage(addr, data, dx=dx)
         response = await self.send_request(msg, timeout=timeout)
         return response
     

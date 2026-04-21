@@ -20,10 +20,11 @@ class MyWindow(QtWidgets.QMainWindow):
         
         # init private members
         self.__ComConnectionState = False
+        self.__dchain_length = 1
         self.__sworker = None
         self.__dispatcher = None
         self.__thread  = None
-        self.__status_window = None
+        self.__status_windows = []
         # Load the UI with absolute path
         ui_path = os.path.join(os.path.dirname(__file__), "UIs", "main_gui.ui")
         uic.loadUi(ui_path, self)
@@ -43,8 +44,9 @@ class MyWindow(QtWidgets.QMainWindow):
         self.WriteAddrInput.returnPressed.connect(lambda: self.WriteValInput.setFocus())
         # initial ports scan
         self.ComRefreshButton_clicked()
-        #self.__status_window = GDControlPanel(self.__dispatcher)
-        #self.__status_window.show()
+        self.__sync_dchain_state()
+        #self.__status_windows = [GDControlPanel(self.__dispatcher, daisyChainIndex=0)]
+        #self.__status_windows[0].show()
     def __startup_validation(self):
         """Validate that all required directories and files exist"""
         base_dir = os.path.dirname(__file__)
@@ -97,7 +99,8 @@ class MyWindow(QtWidgets.QMainWindow):
         self.__handle_ComStopButton_state()
         self.__handle_WriteValButton_state()
         self.__handle_ReadValButton_state()
-        
+        self.__handle_DChainLengthSpinBox_state()
+        self.__handle_DXComboBox_state()
     def ComConnectButton_clicked(self):
         print('Connecting com ports')
         # if previous worker alive , stop it!
@@ -153,7 +156,8 @@ class MyWindow(QtWidgets.QMainWindow):
         
         # Use dispatcher to send and await response
         try:
-            response = await self.__dispatcher.write_register(addr, val, timeout=2.0)
+            dx = self.__get_selected_dx()
+            response = await self.__dispatcher.write_register(addr, val, timeout=2.0, dx=dx)
             print(f'[✓] Write successful: {response}')
         except asyncio.TimeoutError:
             print(RED_CMD , f'[✗] Write timeout for addr {addr:#x}' , WHITE_CMD)
@@ -181,7 +185,8 @@ class MyWindow(QtWidgets.QMainWindow):
         
         # Use dispatcher to send and await response
         try:
-            data = await self.__dispatcher.read_register(addr, timeout=2.0)
+            dx = self.__get_selected_dx()
+            data = await self.__dispatcher.read_register(addr, timeout=2.0, dx=dx)
             print(f'[✓] Read successful: addr={addr:#x}, data={data:#x}')
             self.ReadValOutput.setText(hex(data))
         except asyncio.TimeoutError:
@@ -197,17 +202,40 @@ class MyWindow(QtWidgets.QMainWindow):
         self.WriteAddrInput.setEnabled(state)
         self.ReadAddrInput.setEnabled(state)
 
+    def __handle_DChainLengthSpinBox_state(self):
+        ''' Private Method to handle the state of DChainLengthSpinBox (Enabled/Disabled) according to `__ComConnectionState` '''
+        self.DChainLengthSpinBox.setEnabled(not self.__ComConnectionState)
+
+    def __handle_DXComboBox_state(self):
+        ''' Private Method to handle the state of DXComboBox (Enabled/Disabled) according to `__ComConnectionState` '''
+        self.DXComboBox.setEnabled(self.__ComConnectionState)
+
+    def __sync_dchain_state(self):
+        '''Rebuild DXComboBox items from the current chain length.'''
+        current_dx = self.DXComboBox.currentIndex()
+        self.DXComboBox.blockSignals(True)
+        self.DXComboBox.clear()
+        for dx in range(self.__dchain_length):
+            self.DXComboBox.addItem(str(dx), dx)
+        self.DXComboBox.blockSignals(False)
+
+    def __get_selected_dx(self):
+        '''Return the selected daisy-chain index from the combo box.'''
+        dx = self.DXComboBox.currentData()
+        if dx is None:
+            return 0
+        return int(dx)
+
     def __handle_ComStopButton_state(self):
         ''' Private Method to handle the state of ComStop Button (Enabled/Disabled) according to `__ComConnectionState` '''
-        
         self.ComStopButton.setEnabled(self.__ComConnectionState)
+
     def __handle_WriteValButton_state(self):
         ''' Private Method to handle the state of ComStop Button (Enabled/Disabled) according to `__ComConnectionState` '''
-        
         self.WriteValButton.setEnabled(self.__ComConnectionState)
+        
     def __handle_ReadValButton_state(self):
         ''' Private Method to handle the state of ComStop Button (Enabled/Disabled) according to `__ComConnectionState` '''
-        
         self.ReadValButton.setEnabled(self.__ComConnectionState)
 
     def __connect_to_Serial(self, port , baud_rate):
@@ -244,31 +272,42 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def __disconnect_serial(self):
         ''' Disconnects serial connection and kills thread/serial worker '''
+        self.__close_status_windows()
         if self.__dispatcher is not None:
             # Cancel all pending requests
             self.__dispatcher.cancel_all_pending()
             self.__dispatcher = None
         if self.__sworker is not None:
             self.__sworker.stop()
+        if self.__thread is not None:
             self.__thread.quit()
             self.__thread.wait()
         self.__ComConnectionState = False
+
+    def __close_status_windows(self):
+        '''Close and clear all GD control panel windows.'''
+        for window in self.__status_windows:
+            window.close()
+            window.deleteLater()
+        self.__status_windows.clear()
 
 
     def __on_status_update(self , status):
         print('[!]__on status update' , status)
         if status:
             self.__ComConnectionState = True
-            # Create and show a new control panel, pass dispatcher instead of worker
-            self.__status_window = GDControlPanel(self.__dispatcher)
-            self.__status_window.show()
+            # Create and show one control panel per GD in the configured daisy chain.
+            self.__close_status_windows()
+            self.__dchain_length = int(self.DChainLengthSpinBox.value())
+            self.__sync_dchain_state()
+            for daisy_index in range(self.__dchain_length):
+                panel = GDControlPanel(self.__dispatcher, daisyChainIndex=daisy_index)
+                panel.show()
+                self.__status_windows.append(panel)
         else:
             self.__ComConnectionState = False
-            # Terminate control panel if it exists
-            if self.__status_window is not None:
-                self.__status_window.close()
-                self.__status_window.deleteLater()
-                self.__status_window = None
+            # Terminate control panels if they exist
+            self.__close_status_windows()
         self.__refresh_ui()
 
 if __name__ == '__main__':

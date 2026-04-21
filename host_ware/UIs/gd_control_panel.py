@@ -17,22 +17,24 @@ except ImportError:
 
 
 class GDControlPanel(QtWidgets.QWidget):
-    def __init__(self, serial_dispatcher):
+    def __init__(self, serial_dispatcher, daisyChainIndex=0):
         """
         Initialize the GD3160 Control Panel
         
         Args:
             serial_dispatcher: Reference to the SerialDispatcher instance for async messaging
+            daisyChainIndex: Zero-based index of the GD in the daisy chain
         """
         super().__init__()
         self.__dispatcher = serial_dispatcher
+        self.daisyChainIndex = daisyChainIndex
         
         # Load the UI with absolute path
         ui_path = os.path.join(os.path.dirname(__file__), "gd_control_panel.ui")
         uic.loadUi(ui_path, self)
         
         # Set window properties
-        self.setWindowTitle("GD3160 Control Panel")
+        self.setWindowTitle(f"GD3160 Control Panel [DX={self.daisyChainIndex}]")
         
         # Setup register map tab
         self._setup_register_map_tab()
@@ -101,7 +103,7 @@ class GDControlPanel(QtWidgets.QWidget):
         if self.__dispatcher is None:
             print("[GDControlPanel] ERROR: Serial dispatcher not available")
             # Still update the read value for UI feedback in test mode
-            reg_view.set_read_value(value)
+            # reg_view.set_read_value(value)
             return
         
         # Create async task to write register
@@ -110,7 +112,7 @@ class GDControlPanel(QtWidgets.QWidget):
     async def _async_write_register(self, reg_view: RegisterViewWidget, address: int, value: int):
         """Async handler for register write"""
         try:
-            response = await self.__dispatcher.write_register(address, value, timeout=2.0)
+            response = await self.__dispatcher.write_register(address, value, timeout=2.0, dx=self.daisyChainIndex)
             print(f"[GDControlPanel] Write successful: {response}")
             # Update read value to reflect write
             reg_view.set_read_value(value)
@@ -143,7 +145,7 @@ class GDControlPanel(QtWidgets.QWidget):
     async def _async_read_register(self, reg_view: RegisterViewWidget, address: int):
         """Async handler for register read"""
         try:
-            data = await self.__dispatcher.read_register(address, timeout=2.0)
+            data = await self.__dispatcher.read_register(address, timeout=2.0, dx=self.daisyChainIndex)
             print(f"[GDControlPanel] Read successful: 0x{data:03X}")
             # Update the widget's read display
             reg_view.set_read_value(data)

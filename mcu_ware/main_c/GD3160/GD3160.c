@@ -34,15 +34,16 @@ static const uint8_t crc_table[256] =
 
  
 //////////////////////////////////////////////////////////////////////////////////////////
-//  Function name: char Calculate_SPI_CRC
+//  Function name: char Calculate_SPI_CRC_Table
 //
-/// @brief         Calculates the required GD31xx SPI CRC value.
+/// @brief         Calculates the required GD31xx SPI CRC value,
+///				   Table based.
 //
 /// @param         uint16_t wData - SPI word.
 //
 /// @return        unsigned char - CRC value.
 //////////////////////////////////////////////////////////////////////////////////////////
-unsigned char Calculate_SPI_CRC(uint16_t wData)
+unsigned char Calculate_SPI_CRC_Table(uint16_t wData)
 {
 	uint8_t tbl_idx;
 	uint8_t crc;
@@ -60,6 +61,33 @@ unsigned char Calculate_SPI_CRC(uint16_t wData)
 		tbl_idx = (crc ^ *(data + len));
 		crc = crc_table[tbl_idx];
 	}
+
+	return crc;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//  Function name: char Calculate_SPI_CRC
+//
+/// @brief         Calculates the required GD31xx SPI CRC value.
+//
+/// @param         uint16_t wData - SPI word.
+//
+/// @return        unsigned char - CRC value.
+//////////////////////////////////////////////////////////////////////////////////////////
+unsigned char Calculate_SPI_CRC(uint16_t wData) {
+	uint8_t crc = 0x42;
+	uint8_t data[2] = {(uint8_t)((wData >> 8) & 0xFF), (uint8_t)(wData & 0xFF)};
+
+	for (uint8_t i = 0; i < 2; ++i) {
+		crc ^= data[i];
+    	for (uint8_t bit = 0; bit < 8; ++bit) {
+      		uint8_t msb = (uint8_t)(crc & 0x80);
+      		crc <<= 1;
+      		if (msb) {
+        		crc ^= 0x2F;
+      		}
+    	}
+  	}
 
 	return crc;
 }

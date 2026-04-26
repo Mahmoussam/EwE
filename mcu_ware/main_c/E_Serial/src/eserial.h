@@ -24,17 +24,17 @@ uint8_t get_bytes_from_SerialMessage(uint8_t *bytes , SerialMessage *msg);
  * Takes parameters and SerialMessage pointer memory
  * returns 0 on success
  */
-uint8_t make_WriteSerialMessage(uint8_t addr , uint16_t data , uint8_t mid , SerialMessage *msg);
+uint8_t make_WriteSerialMessage(uint8_t addr , uint16_t data , uint8_t dx , uint8_t mid , SerialMessage *msg);
 /**
  * Makes and inits a read Serial Message.
  * Takes parameters and SerialMessage pointer memory
  * returns 0 on success
  */
-uint8_t make_ReadSerialMessage(uint8_t addr , uint8_t mid , SerialMessage *msg);
+uint8_t make_ReadSerialMessage(uint8_t addr , uint8_t dx , uint8_t mid , SerialMessage *msg);
 /**
  * Makes and inits an ACK Serial Message.
  * Takes parameters and SerialMessage pointer memory
  * returns 0 on success
  */
-uint8_t make_ACKSerialMessage(uint8_t addr , uint16_t data , uint8_t mid , SerialMessage *msg);
+uint8_t make_ACKSerialMessage(uint8_t addr , uint16_t data , uint8_t dx , uint8_t mid , SerialMessage *msg);
 #endif

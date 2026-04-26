@@ -300,6 +300,9 @@ class MyWindow(QtWidgets.QMainWindow):
             self.__close_status_windows()
             self.__dchain_length = int(self.DChainLengthSpinBox.value())
             self.__sync_dchain_state()
+
+            self.__sworker.send_message(AcknowledgeDaisyChainLenghtMessage(dchain_len=self.__dchain_length))
+
             for daisy_index in range(self.__dchain_length):
                 panel = GDControlPanel(self.__dispatcher, daisyChainIndex=daisy_index)
                 panel.show()

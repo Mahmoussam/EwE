@@ -1279,6 +1279,19 @@ typedef enum ReqAdcAmux
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
+//  Function name: char Calculate_SPI_CRC_Table
+//
+/// @brief         Calculates the required GD31xx SPI CRC value,
+///                Table based.
+//
+/// @param         uint16_t wData - SPI word.
+//
+/// @return        unsigned char - CRC value.
+//////////////////////////////////////////////////////////////////////////////////////////
+unsigned char Calculate_SPI_CRC_Table(uint16_t wData);
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
 //  Function name: char Calculate_SPI_CRC
 //
 /// @brief         Calculates the required GD31xx SPI CRC value.

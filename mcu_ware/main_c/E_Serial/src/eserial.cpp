@@ -12,7 +12,9 @@ uint8_t init_SerialMessage_from_bytes(uint8_t *bytes , SerialMessage *msg){
     msg->data <<= 8;
     msg->data |= bytes[4];
 
-    msg->mid = bytes[5];
+    msg->dx = bytes[5];
+
+    msg->mid = bytes[6];
 
     msg->type = msg->cmd ;//get_SerialMessageType_from_cmd(msg->cmd);
 
@@ -48,11 +50,12 @@ uint8_t get_bytes_from_SerialMessage(uint8_t *bytes , SerialMessage *msg){
     bytes[2] = msg->addr;
     bytes[3] = (msg->data >> 8);
     bytes[4] = (msg->data & 0xFF);
-    bytes[5] = msg->mid;
+    bytes[5] = msg->dx;
+    bytes[6] = msg->mid;
     return 0;
 }
 
-uint8_t make_ACKSerialMessage(uint8_t addr , uint16_t data , uint8_t mid , SerialMessage *msg){
+uint8_t make_ACKSerialMessage(uint8_t addr , uint16_t data , uint8_t dx , uint8_t mid , SerialMessage *msg){
     if(msg == NULL)return 1;
     msg->cmd = ACK;
     
@@ -60,12 +63,14 @@ uint8_t make_ACKSerialMessage(uint8_t addr , uint16_t data , uint8_t mid , Seria
 
     msg->data = data;
 
+    msg->dx = dx;
+
     msg->mid = mid;
     
     return 0;
 }
 
-uint8_t make_WriteSerialMessage(uint8_t addr , uint16_t data , uint8_t mid , SerialMessage *msg){
+uint8_t make_WriteSerialMessage(uint8_t addr , uint16_t data , uint8_t dx , uint8_t mid , SerialMessage *msg){
     if(msg == NULL)return 1;
     msg->cmd = WR;
     
@@ -73,18 +78,22 @@ uint8_t make_WriteSerialMessage(uint8_t addr , uint16_t data , uint8_t mid , Ser
 
     msg->data = data;
 
+    msg->dx = dx;
+
     msg->mid = mid;
 
     return 0;
 }
 
-uint8_t make_ReadSerialMessage(uint8_t addr , uint8_t mid , SerialMessage *msg){
+uint8_t make_ReadSerialMessage(uint8_t addr , uint8_t dx , uint8_t mid , SerialMessage *msg){
     if(msg == NULL)return 1;
     msg->cmd = RE;
     
     msg->addr = addr;
 
     msg->data = 0;
+
+    msg->dx = dx;
 
     msg->mid = mid;
 

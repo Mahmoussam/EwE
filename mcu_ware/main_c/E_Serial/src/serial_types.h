@@ -7,8 +7,9 @@
 #define CMD_LEN   1
 #define ADDR_LEN  1
 #define DATA_LEN  2
+#define DX_LEN    1
 #define MID_LEN   1
-#define MSG_LEN  (1 + CMD_LEN + ADDR_LEN + DATA_LEN + MID_LEN)
+#define MSG_LEN  (1 + CMD_LEN + ADDR_LEN + DATA_LEN + DX_LEN + MID_LEN)
 
 typedef enum{
     NOP = 0,
@@ -25,13 +26,14 @@ typedef enum{
  *  data or value
  *  ID ,just a counter based so far ,counted at host side..
  * 
- *     # raw binary (example format: "!CADDI")  C for cmd , D for data , I for ID
+ *     # raw binary (example format: "!CADDXI")  C for cmd, D for data, X for dx, I for ID
  */
 typedef struct{
     uint16_t data;
     
     uint8_t cmd;
     uint8_t addr;
+    uint8_t dx;
     uint8_t mid;
     
     SerialMessageType type;

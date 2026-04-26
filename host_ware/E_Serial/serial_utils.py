@@ -1,12 +1,3 @@
-''' Serial Commands So far:
-    
-    1      ACKnowledge
-    2      Write Addr Val
-    3      Read  Addr 0
-
-    # raw binary (example format: "!CADD")  C for cmd , D for data..
-'''
-
 import serial.tools.list_ports
 from PyQt5.QtCore import QObject, QThread, pyqtSignal, pyqtSlot
 import time

@@ -100,7 +100,15 @@ uint32_t DC_send(uint8_t rw,
 
     return rx;
 }
+void printHexValue(uint32_t value){
+    if (value < 0x100000) Serial.print('0');
+    if (value < 0x10000)  Serial.print('0');
+    if (value < 0x1000)   Serial.print('0');
+    if (value < 0x100)    Serial.print('0');
+    if (value < 0x10)     Serial.print('0');
+    Serial.println(value, HEX);
 
+}
 void setup() {
   pinMode(CSB_PIN, OUTPUT);
   digitalWrite(CSB_PIN, HIGH);
@@ -115,6 +123,12 @@ void setup() {
 void loop() {
   if (Serial.available() > 0) {
     int addrInput = Serial.parseInt();
+
+    //uint32_t value = read24BitsSPI();
+    //Serial.print("Next 24-bit SPI value: 0x");
+    //printHexValue(value);
+
+    
     while (Serial.available() > 0) Serial.read();
 
     if (addrInput < 0 || addrInput > 31) {
@@ -124,17 +138,12 @@ void loop() {
 
     uint8_t addr = (uint8_t)addrInput;
     uint32_t rx = DC_send(0, addr, 0);
-
+    delay(10);
   
     uint32_t value = read24BitsSPI();
 
     Serial.print("Next 24-bit SPI value: 0x");
-    if (value < 0x100000) Serial.print('0');
-    if (value < 0x10000)  Serial.print('0');
-    if (value < 0x1000)   Serial.print('0');
-    if (value < 0x100)    Serial.print('0');
-    if (value < 0x10)     Serial.print('0');
-    Serial.println(value, HEX);
-  }
-  
+    printHexValue(value);
+    
+  } 
 }

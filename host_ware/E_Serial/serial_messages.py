@@ -7,7 +7,9 @@
     # raw binary (example format: "!CADDXI")  C for cmd , D for data , X for daisy-chain zero-based index, I for ID
 
     Notes:
-        - ACKnowledge addr = 1: from host pc to mcu to inform mcu of daisy chain length
+        - ACKnowledge addr = 1, dx = chain length. 
+            from host pc to mcu to inform mcu of daisy chain length.
+        - ACKnowledge addr = 2: Ask mcu the length of daisy chain.
 '''
 
 class SerialMessage():
@@ -77,6 +79,16 @@ class AcknowledgeDaisyChainLenghtMessage(AcknowledgeMessage):
 
     def __repr__(self):
         return f"<ACK DaisyChainLength Message#{self.MID_CNT} cmd={self._cmd:#x}, addr={self._addr:#x}, data={self._data:#x}, dx={self._dx:#x}>"
+
+
+class AskDaisyChainLenghtMessage(AcknowledgeMessage):
+    def __init__(self):
+        super().__init__(dx=0)
+        self._addr = 0x02
+        self._data = 0xFFFF
+
+    def __repr__(self):
+        return f"<ACK AskDaisyChainLength Message#{self.MID_CNT} cmd={self._cmd:#x}, addr={self._addr:#x}, data={self._data:#x}, dx={self._dx:#x}>"
     
 class WriteMessage(SerialMessage):
     def __init__(self , addr , data , dx = 0):

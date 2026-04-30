@@ -291,6 +291,18 @@ class MyWindow(QtWidgets.QMainWindow):
             window.deleteLater()
         self.__status_windows.clear()
 
+    async def __query_mcu_dchain_length(self):
+        '''Ask MCU for daisy-chain length using ACK addr=2 and print response.'''
+        if self.__dispatcher is None:
+            return
+        try:
+            response = await self.__dispatcher.send_request(AskDaisyChainLenghtMessage(), timeout=2.0)
+            print(f"[Main] MCU reported daisy-chain length: {response._dx}")
+        except asyncio.TimeoutError:
+            print("[Main] Timeout while querying MCU daisy-chain length")
+        except Exception as ex:
+            print(f"[Main] Failed to query MCU daisy-chain length: {ex}")
+
 
     def __on_status_update(self , status):
         print('[!]__on status update' , status)
@@ -300,13 +312,16 @@ class MyWindow(QtWidgets.QMainWindow):
             self.__close_status_windows()
             self.__dchain_length = int(self.DChainLengthSpinBox.value())
             self.__sync_dchain_state()
-
-            self.__sworker.send_message(AcknowledgeDaisyChainLenghtMessage(dchain_len=self.__dchain_length))
+            time.sleep(1)
+            #self.__sworker.send_message(AcknowledgeDaisyChainLenghtMessage(dchain_len=self.__dchain_length))
+            asyncio.create_task(self.__dispatcher.send_request(AcknowledgeDaisyChainLenghtMessage(dchain_len=self.__dchain_length) , timeout=2.0))
+            asyncio.create_task(self.__query_mcu_dchain_length())
 
             for daisy_index in range(self.__dchain_length):
                 panel = GDControlPanel(self.__dispatcher, daisyChainIndex=daisy_index)
                 panel.show()
                 self.__status_windows.append(panel)
+            
         else:
             self.__ComConnectionState = False
             # Terminate control panels if they exist

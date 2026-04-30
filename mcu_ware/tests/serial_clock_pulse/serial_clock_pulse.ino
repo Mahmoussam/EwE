@@ -15,7 +15,7 @@ static uint8_t Calculate_SPI_CRC(uint16_t wData) {
 
   return crc;
 }
-
+const uint8_t g_daisy_chain_length = 2;
 const uint8_t CSB_PIN = 10;
 
 uint32_t read24BitsSPI() {
@@ -100,6 +100,73 @@ uint32_t DC_send(uint8_t rw,
 
     return rx;
 }
+
+static uint32_t SPI_shift_24bit2(uint32_t frame)
+{
+	uint32_t tx_frame = (frame << 8) | Calculate_SPI_CRC(frame);
+	uint32_t rx = 0;
+
+	rx |= ((uint32_t)SPI.transfer((tx_frame >> 16) & 0xFF)) << 16;
+	rx |= ((uint32_t)SPI.transfer((tx_frame >> 8) & 0xFF)) << 8;
+	rx |= ((uint32_t)SPI.transfer(tx_frame & 0xFF));
+
+	return rx;
+}
+
+uint32_t DC_send2(uint8_t rw, uint8_t addr, uint16_t data, uint8_t dx)
+{
+	uint32_t frame = 0;
+	frame |= ((uint32_t)(rw & 0x01)) << 15;
+	frame |= ((uint32_t)(addr & 0x1F)) << 10;
+	frame |= ((uint32_t)(data & 0x03FF));
+
+	uint32_t rx = 0;
+
+	digitalWrite(SS, LOW);
+	SPI.beginTransaction(SPISettings(
+		4000000, // 4 MHz
+		MSBFIRST,
+		SPI_MODE0));
+	// DX is zero based where first (index zero) chip is the one at MOSI
+	(void)SPI_shift_24bit2(frame);
+
+	for (uint8_t i = 0; i < dx; ++i)
+	{
+		rx = SPI_shift_24bit2(0);
+	}
+
+	SPI.endTransaction();
+	digitalWrite(SS, HIGH);
+
+	return rx;
+}
+
+uint32_t DC_read2(uint8_t dx)
+{
+
+
+	uint32_t rx = 0;
+
+	digitalWrite(SS, LOW);
+	SPI.beginTransaction(SPISettings(
+		4000000, // 4 MHz
+		MSBFIRST,
+		SPI_MODE0));
+
+	// Align the chain so the desired chip's outgoing 24-bit frame reaches MOSI.
+	for (uint8_t i = 0; i < (uint8_t)(g_daisy_chain_length - 1 - dx); ++i)
+	{
+		(void)SPI_shift_24bit2(0);
+	}
+
+	rx = SPI_shift_24bit2(0);
+
+	SPI.endTransaction();
+	digitalWrite(SS, HIGH);
+
+	return rx;
+}
+
 void printHexValue(uint32_t value){
     if (value < 0x100000) Serial.print('0');
     if (value < 0x10000)  Serial.print('0');
@@ -135,7 +202,7 @@ void loop() {
       Serial.println("Invalid addr. Enter 0-31.");
       return;
     }
-
+    /*
     uint8_t addr = (uint8_t)addrInput;
     uint32_t rx = DC_send(0, addr, 0);
     delay(10);
@@ -144,6 +211,14 @@ void loop() {
 
     Serial.print("Next 24-bit SPI value: 0x");
     printHexValue(value);
-    
+    */
+    uint8_t addr = (uint8_t)addrInput;
+    uint32_t rx = DC_send2(0 , addr , 0 , 1);
+    delay(10);
+  
+    uint32_t value = DC_read2(1);
+
+    Serial.print("Next 24-bit SPI value: 0x");
+    printHexValue(value);
   } 
 }

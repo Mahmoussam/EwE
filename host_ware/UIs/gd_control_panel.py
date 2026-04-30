@@ -98,10 +98,10 @@ class GDControlPanel(QtWidgets.QWidget):
         address = reg_view.get_register_address()
         value = reg_view.get_write_value()
         
-        print(f"[GDControlPanel] Write request: {name} (0x{address:02X}) = 0x{value:03X}")
+        print(f"[GDControlPanel][DX={self.daisyChainIndex}] Write request: {name} (0x{address:02X}) = 0x{value:03X}")
         
         if self.__dispatcher is None:
-            print("[GDControlPanel] ERROR: Serial dispatcher not available")
+            print(f"[GDControlPanel][DX={self.daisyChainIndex}] ERROR: Serial dispatcher not available")
             # Still update the read value for UI feedback in test mode
             # reg_view.set_read_value(value)
             return
@@ -113,13 +113,13 @@ class GDControlPanel(QtWidgets.QWidget):
         """Async handler for register write"""
         try:
             response = await self.__dispatcher.write_register(address, value, timeout=2.0, dx=self.daisyChainIndex)
-            print(f"[GDControlPanel] Write successful: {response}")
+            print(f"[GDControlPanel][DX={self.daisyChainIndex}] Write successful: {response}")
             # Update read value to reflect write
             reg_view.set_read_value(value)
         except asyncio.TimeoutError:
-            print(f"[GDControlPanel] Write timeout for addr 0x{address:02X}")
+            print(f"[GDControlPanel][DX={self.daisyChainIndex}] Write timeout for addr 0x{address:02X}")
         except Exception as ex:
-            print(f"[GDControlPanel] Write error: {ex}")
+            print(f"[GDControlPanel][DX={self.daisyChainIndex}] Write error: {ex}")
     
     def _on_register_read(self, reg_view: RegisterViewWidget):
         """
@@ -131,10 +131,10 @@ class GDControlPanel(QtWidgets.QWidget):
         name = reg_view.get_register_name()
         address = reg_view.get_register_address()
         
-        print(f"[GDControlPanel] Read request: {name} (0x{address:02X})")
+        print(f"[GDControlPanel][DX={self.daisyChainIndex}] Read request: {name} (0x{address:02X})")
         
         if self.__dispatcher is None:
-            print("[GDControlPanel] ERROR: Serial dispatcher not available")
+            print(f"[GDControlPanel][DX={self.daisyChainIndex}] ERROR: Serial dispatcher not available")
             # Set dummy value for test mode
             reg_view.set_read_value(0x000)
             return
@@ -146,13 +146,13 @@ class GDControlPanel(QtWidgets.QWidget):
         """Async handler for register read"""
         try:
             data = await self.__dispatcher.read_register(address, timeout=2.0, dx=self.daisyChainIndex)
-            print(f"[GDControlPanel] Read successful: 0x{data:03X}")
+            print(f"[GDControlPanel][DX={self.daisyChainIndex}] Read successful: 0x{data:03X}")
             # Update the widget's read display
             reg_view.set_read_value(data)
         except asyncio.TimeoutError:
-            print(f"[GDControlPanel] Read timeout for addr 0x{address:02X}")
+            print(f"[GDControlPanel][DX={self.daisyChainIndex}] Read timeout for addr 0x{address:02X}")
         except Exception as ex:
-            print(f"[GDControlPanel] Read error: {ex}")
+            print(f"[GDControlPanel][DX={self.daisyChainIndex}] Read error: {ex}")
 
 
 if __name__ == '__main__':

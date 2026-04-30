@@ -2,8 +2,11 @@
 #include <SPI.h>
 
 #include "E_Serial/src/E_Serial.h"
-#include "GD3160/GD3160.h"
 
+#define READ 0
+#define WRITE 1
+
+#define DEBUG_LED 8
 // Chip select pin
 #define SS 10
 
@@ -15,7 +18,29 @@ byte rxIndex = 0;
 bool msgReady = false;
 
 bool state13 = false;
-uint8_t g_daisy_chain_length = 1;
+volatile uint8_t g_daisy_chain_length = 1;
+
+void send_serial_sig(){
+	char sig[]  = {'!' , 1 , 2 , 3 , 4 , 5 , 8};
+	sendMessage(sig);
+}
+
+static uint8_t Calculate_SPI_CRC(uint16_t wData) {
+  uint8_t crc = 0x42;
+  uint8_t data[2] = {(uint8_t)((wData >> 8) & 0xFF), (uint8_t)(wData & 0xFF)};
+
+  for (uint8_t i = 0; i < 2; ++i) {
+    crc ^= data[i];
+    for (uint8_t bit = 0; bit < 8; ++bit) {
+      uint8_t msb = (uint8_t)(crc & 0x80);
+      crc <<= 1;
+      if (msb) crc ^= 0x2F;
+    }
+  }
+
+  return crc;
+}
+
 void setup()
 {
 	// Serial comm to PC init
@@ -31,7 +56,10 @@ void setup()
 
 	SPI.begin();
 
-	pinMode(13, OUTPUT);
+	pinMode(DEBUG_LED, OUTPUT);
+	digitalWrite(DEBUG_LED , LOW);
+	//send_serial_sig();
+	
 }
 
 // ------------------------------------------------------
@@ -124,18 +152,27 @@ uint32_t DC_read(uint8_t dx)
 
 	return rx;
 }
-
+void toggleDBG(){
+	state13 = !state13;
+	digitalWrite(DEBUG_LED, state13);
+}
 // ------------------------------------------------------
 // Function: onMessageReceived
 // Called when a full valid message is received
 // ------------------------------------------------------
 void onMessageReceived(const byte *raw_msg)
 {
+	
+	//sendMessage(raw_msg);
+	//return;
 	SerialMessage msg;
 	if (init_SerialMessage_from_bytes(raw_msg, &msg) == 0)
 	{
-		state13 = !state13;
-		digitalWrite(13, state13);
+		// echo
+		/*char dmp[7] = {'!' , msg.addr , msg.addr , (msg.data >> 8) & 0xFF , msg.data & 0xFF , msg.dx , 101};
+		sendMessage(dmp);*/
+
+		
 		SerialMessage response;
 		uint8_t out[MSG_SIZE];
 		if (msg.type == WR)
@@ -146,25 +183,40 @@ void onMessageReceived(const byte *raw_msg)
 		}
 		else if (msg.type == RE)
 		{
+			//sendMessage(raw_msg);
+			if(READ == 0 && msg.dx == 1)toggleDBG();	
 			(void)DC_send(READ, msg.addr, 0, msg.dx);
+			delay(10);
 			uint32_t raw_frame = DC_read(msg.dx);
-			uint16_t reg_value = (uint16_t)((raw_frame >> 8) & 0x03FF);
+			uint16_t reg_value = (uint16_t)((raw_frame >> 8) & ((uint32_t) 0x03FF));
+			
+
 			make_ACKSerialMessage(msg.addr, reg_value, msg.dx, msg.mid, &response);
-			get_bytes_from_SerialMessage(out, &response);
 		}
 		else if (msg.type == ACK)
 		{
 			// Host handshake extension: ACK with addr=0x01 carries daisy-chain length in dx.
+			
 			if (msg.addr == 0x01)
 			{
 				g_daisy_chain_length = max(msg.dx, 1);
+				//make_ACKSerialMessage(4, 0xABCD, g_daisy_chain_length, 100, &response);
+				make_ACKSerialMessage(5, msg.data, g_daisy_chain_length, msg.mid, &response);
+			}
+			// Host query extension: ACK with addr=0x02 asks MCU for current daisy-chain length.
+			else if (msg.addr == 0x02)
+			{
+				make_ACKSerialMessage(msg.addr, msg.data, g_daisy_chain_length, msg.mid, &response);
+			}
+			else
+			{
+				// Reply with ACK so host can verify command receipt if needed.
+				make_ACKSerialMessage(msg.addr, msg.data, msg.dx, msg.mid, &response);
 			}
 
-			// Reply with ACK so host can verify command receipt if needed.
-			make_ACKSerialMessage(msg.addr, msg.data, msg.dx, msg.mid, &response);
-
-			get_bytes_from_SerialMessage(out, &response);
+			
 		}
+		get_bytes_from_SerialMessage(out, &response);
 		sendMessage(out);
 	}
 }
